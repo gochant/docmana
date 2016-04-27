@@ -1,0 +1,28 @@
+<tr id="<%- data.hash %>"
+    class="file-list-item <%- T.mime2Class(data.mime) %>"
+    data-name="<%- data.name %>">
+    <td class="name">
+        <span title="<%= T.fileMetadata(data) %>">
+            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %> drag-block"></span>
+            <span class="filename drag-block">
+                <%- data.name %>
+            </span>
+        </span>
+
+    </td>
+    <td class="metadata date">
+        <span class="drag-block">
+            <%- T.formatDate(data.ts) %>
+        </span>
+    </td>
+    <td class="metadata type">
+        <span class="drag-block">
+            <%- L('kind' + T.mime2Type(data.mime)) %>
+        </span>
+    </td>
+    <td class="metadata size">
+        <span class="drag-block">
+            <%- data.mime === 'directory' ? '' : T.formatFileSize(data.size, true) %>
+        </span>
+    </td>
+</tr>

@@ -1,0 +1,15 @@
+<% _.forEach(data, function(item, i){ %>
+    <% if(i === data.length - 1){ %>
+    <li class="active">
+        <span>
+            <%- item.name %>
+        </span>
+    </li>
+    <% }else{ %>
+    <li>
+        <a href="#" data-hash="<%- item.hash %>">
+            <%- item.name %>
+        </a>
+    </li>
+    <% } %>
+<% }); %>

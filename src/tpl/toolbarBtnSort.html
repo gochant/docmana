@@ -1,0 +1,43 @@
+<div class="btn-group btn-group-sm <%- data.name %>">
+    <button type="button" class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false"
+             title="<%- L('cmdSort') %>">
+        <i class="<%- data.icon %>"></i>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="#" data-command="sort" data-field="name">
+                <i class=""></i>
+                <%- L('sortByName') %>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-command="sort" data-field="size">
+                <%- L('sortBySize') %>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-command="sort" data-field="mime">
+                <%- L('sortByType') %>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-command="sort" data-field="ts">
+                <%- L('sortByDate') %>
+            </a>
+        </li>
+        <li role="separator" class="divider"></li>
+        <li>
+            <a href="#" data-command="sort" data-order="asc">
+                <%- L('sortAscending') %>
+            </a>
+        </li>
+        <li>
+            <a href="#" data-command="sort" data-order="desc">
+                <%- L('sortDescending') %>
+            </a>
+        </li>
+    </ul>
+</div>

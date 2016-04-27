@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Docmana</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link id="theme-style" href="assets/bootstrap/themes/default.css" rel="stylesheet" />
+    <link href="../dist/css/docmana.css" rel="stylesheet" />
+    <style>
+        body {
+            padding: 20px 0;
+            font-family: Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+        }
+
+        .navbar-form .form-group {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        Docmana
+                    </a>
+                </div>
+                <form class="navbar-form navbar-right form-inline">
+                    <div class="form-group">
+                        <label class="control-label txt-lang">language: </label>
+                        <select class="form-control" id="select-lang">
+                            <option value="en">en</option>
+                            <option value="zh-CN">zh-CN</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label txt-theme">theme: </label>
+                        <select class="form-control" id="select-theme"></select>
+                    </div>
+                </form>
+            </div>
+        </nav>
+        <div style="height: 500px">
+            <div id="docmana" class="docmana static panel panel-default no-margin" tabindex="1"></div>
+        </div>
+    </div>
+
+    <script src="assets/jquery.min.js"></script>
+    <script src="assets/lodash.min.js"></script>
+    <script src="assets/bootstrap.min.js"></script>
+    <script src="assets/backbone.min.js"></script>
+    <script src="../dist/js/docmana.js"></script>
+    <script>
+        $(function () {
+
+
+
+            function setLocal(key, value) {
+                if (window.localStorage) {
+                    localStorage.setItem(key, value);
+                }
+            }
+
+            function getLocal(key) {
+                if (window.localStorage) {
+                    return localStorage.getItem(key);
+                }
+                return null;
+            }
+
+            var initData = {
+                lang: getLocal('lang') || 'en',
+                theme: getLocal('theme') || 0
+            }
+
+          
+
+            docmana.lang = initData.lang;
+
+            // 这里仅针对这个示例界面简单处理
+            $('.txt-lang').text(docmana.resource('labelLanguage'));
+            $('.txt-theme').text(docmana.resource('labelTheme'));
+
+            var themes = ['default', 'cerulean', 'cosmo', 'darkly', 'flatly', 'lumen', 'paper',
+                'sandstone', 'simplex', 'spacelab', 'superhero', 'tiny'];
+            var $select = $("#select-theme");
+            var $selectLang = $('#select-lang');
+
+            $.each(themes, function (index, value) {
+                $select.append($("<option />")
+                    .val(index)
+                    .text(value));
+            });
+
+            $selectLang.on('change', function () {
+                var val = $(this).val();
+                setLocal('lang', val);
+                window.location.reload();
+            }).val(initData.lang);
+
+            $select.on('change', function () {
+                var val = $(this).val();
+                var theme = themes[val];
+                var css = 'assets/bootstrap/themes/' + theme + '.css';
+                setLocal('theme', val);
+                $("#theme-style").attr("href", css);
+                setTimeout(function () {
+                    $('#docmana').data('docmana').relayout();
+                }, 500);
+            }).val(initData.theme).change();
+
+
+            $('#docmana').docmana({
+                store: {
+                    requestData: {
+                        folder: 'Medias',
+                        lang: docmana.lang
+                    },
+                    url: 'http://192.168.1.18:8097/FileManager/Medias/Index'
+                },
+                workzone: {
+                    layout: 'icons'
+                }
+            });
+        });
+    </script>
+</body>
+</html>

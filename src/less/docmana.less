@@ -1,0 +1,526 @@
+﻿@import "icon.less";
+
+@hover-bg-color: #E5F3FF;
+@hover-border-color: #E5F3FF;
+
+.no-padding {
+    padding: 0;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.modal-dialog.static {
+    margin: 0 auto;
+    padding: 20px 0;
+    height: 100%;
+
+    .modal-content {
+        height: 100%;
+        overflow: hidden;
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .modal-body {
+            position: absolute;
+            bottom: 65px;
+            top: 56px;
+            width: 100%;
+        }
+
+        .modal-footer {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+    }
+}
+
+.docmana.static {
+    height: 100%;
+    position: relative;
+
+    .docmana-heading {
+        position: absolute;
+        width: 100%;
+        top: 0;
+    }
+
+    .docmana-body {
+        position: absolute;
+        width: 100%;
+        /*top: 41px;
+        bottom: 41px;*/
+    }
+
+    .docmana-footer {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
+
+    .docmana-workzone {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        /*top: 40px;*/
+        overflow: auto;
+    }
+
+
+
+    .icons-view,
+    .list-view {
+        height: 100%;
+    }
+
+    .list-view > .datatable-content {
+        position: absolute;
+        bottom: 0;
+        top: 32px;
+        overflow: auto;
+        overflow-y: scroll;
+    }
+}
+
+.docmana {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    outline: none;
+
+    .btn.disabled,
+    .btn[disabled],
+    fieldset[disabled] .btn {
+        cursor: default;
+    }
+
+    table {
+        table-layout: fixed;
+    }
+
+    .file-list-item {
+        /*transition: background .2s;*/
+        border: 1px solid transparent;
+        /*user-select: none;*/
+        cursor: default;
+
+
+
+        &:focus {
+            outline: none;
+        }
+
+        &.cut {
+            .filetype {
+                opacity: .5;
+            }
+        }
+
+        &.ui-selecting {
+            background: #CCE8FF;
+            border: solid 1px #A6D7FF;
+        }
+
+        &.ui-selected {
+            background: #CCE8FF;
+            border: solid 1px #A6D7FF;
+        }
+
+
+        .filename {
+            user-select: none;
+            border: 1px solid transparent;
+            /*white-space: nowrap;*/
+            /*text-overflow: ellipsis;*/
+            /*overflow: hidden;*/
+        }
+    }
+
+    .list-view {
+
+        .datatable-header {
+            padding-right: 30px;
+            border-radius: 0;
+            border-width: 1px 0;
+        }
+
+        .datatable-content {
+            padding: 5px 10px;
+        }
+
+        .file-list-item {
+            .filetype {
+                display: inline-block;
+                width: 34px;
+                height: 34px;
+                margin-right: 5px;
+            }
+
+            .metadata {
+                color: #6D6D87;
+            }
+
+            .filename {
+                display: inline;
+            }
+
+            > td {
+                vertical-align: middle;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                border-top: 1px solid transparent;
+
+                span,
+                div,
+                textarea,
+                input {
+                    vertical-align: middle;
+                }
+
+                &.size {
+                    text-align: right;
+                }
+            }
+
+
+            .inline-edit {
+                display: inline-block;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+    }
+
+    .icons-view {
+        padding: 5px;
+
+        .file-list-item {
+            text-align: center;
+            display: inline-block;
+            vertical-align: top;
+            width: 100px;
+            padding: 0;
+            margin: 0 5px 5px 0;
+
+            &:hover {
+                background: @hover-bg-color;
+                border-color: @hover-border-color;
+            }
+
+            .filetype {
+                display: block;
+                margin: 5px auto;
+                width: 64px;
+                height: 64px;
+                overflow: hidden;
+            }
+
+            .filename {
+                width: 100%;
+                font-size: 13px;
+                text-align: center;
+                word-break: break-word;
+            }
+
+            .inline-edit {
+                width: 100%;
+                font-size: 13px;
+                text-align: center;
+            }
+        }
+    }
+
+    .drop-active {
+        background: #CCE8FF;
+        border: solid 1px #A6D7FF;
+    }
+}
+
+.docmana-file-info {
+    position: absolute;
+    width: 400px;
+    top: 50%;
+    margin-top: -60px;
+    left: 50%;
+    margin-left: -200px;
+}
+
+.clear_input {
+    font-size: 1.4em;
+    font-weight: bold;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.docmana-navigation,
+.docmana-heading,
+.docmana-footer {
+    padding: 5px;
+}
+
+.docmana-navigation {
+    .breadcrumb-group {
+        width: auto;
+        margin-bottom: 0;
+        padding: 0 10px;
+
+        .breadcrumb {
+            display: table;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            height: 100%;
+
+            > li {
+                display: table-cell;
+                vertical-align: middle;
+            }
+
+            > li + li:before {
+                padding: 0;
+                padding-left: 3px;
+                .docmana-icon();
+                content: "\f105";
+            }
+
+            li > a,
+            li > span {
+                display: inline-block;
+                padding: 0 5px;
+                border: 1px solid transparent;
+            }
+
+            li:first-child {
+                > a,
+                > span {
+                    padding-left: 0;
+                }
+            }
+        }
+    }
+}
+
+.docmana-statusbar {
+    line-height: 30px;
+
+    .text-total {
+        margin-right: 30px;
+    }
+
+    .docmana-group-layout {
+        float: right;
+    }
+    /*.btn {
+        border-color: transparent;
+        background-color: transparent;
+        margin: 0;
+    }*/
+}
+
+
+.docmana-toolbar {
+    .upload {
+        form {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            filter: Alpha(Opacity=0);
+            cursor: pointer;
+            overflow: hidden;
+
+            input[type="file"] {
+                cursor: pointer;
+                width: 100%;
+                height: 100%;
+                padding-left: 40px;
+            }
+        }
+    }
+
+    .docmana-group-view {
+        float: right;
+    }
+
+    .sort {
+        .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+
+        .dropdown-menu > li > a {
+            padding-left: 30px;
+
+            &:before {
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                pointer-events: none;
+                position: absolute;
+                top: auto;
+                left: auto;
+                margin-left: -1.25rem;
+                width: 1.2em;
+                opacity: 1;
+                color: inherit;
+                vertical-align: top;
+            }
+
+            &.active:before {
+                content: '•';
+            }
+        }
+    }
+
+
+    .btn.disabled,
+    .btn[disabled],
+    fieldset[disabled] .btn {
+        cursor: default;
+    }
+}
+
+.ui-selectable-helper {
+    position: absolute;
+    z-index: 100;
+    background: rgba(170, 204,238,.6);
+    border: 1px solid #3399FF;
+    overflow: hidden;
+}
+
+.inline-edit {
+    display: block;
+    padding: 0;
+    border: 1px solid black;
+    resize: none;
+    overflow: hidden;
+    line-height: 1.42857143;
+    margin: 0;
+}
+
+.cwd-draggable-helper {
+    width: 50px;
+    height: 50px;
+    z-index: 12;
+    position: fixed;
+    _position: absolute;
+    display: block;
+
+    .badge {
+        position: absolute;
+        z-index: 111;
+    }
+
+    .filetype {
+        position: absolute;
+        width: 34px;
+        height: 34px;
+        top: 3px;
+    }
+
+    .icon0 {
+        left: 3px;
+        z-index: 15;
+    }
+
+    .icon1 {
+        left: 11px;
+        top: 6px;
+        z-index: 14;
+    }
+
+    .icon2 {
+        left: 19px;
+        top: 9px;
+        z-index: 13;
+    }
+
+    .icon3 {
+        left: 27px;
+        top: 12px;
+        z-index: 12;
+    }
+}
+
+.docmana-icon {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.docmana-icon-refresh:before {
+    content: "\f021";
+}
+
+.docmana-icon-sort:before {
+    content: "\f034";
+}
+
+.docmana-icon-rename:before {
+    content: "\f033";
+}
+
+.docmana-icon-duplicate:before {
+    content: "\f0db";
+}
+
+.docmana-icon-mkdir:before {
+    content: "\f07b";
+}
+
+.docmana-icon-download:before {
+    content: "\f019";
+}
+
+.docmana-icon-back:before {
+    content: "\f060";
+}
+
+.docmana-icon-forward:before {
+    content: "\f061";
+}
+
+.docmana-icon-open:before {
+    content: "\f115";
+}
+
+.docmana-icon-cut:before {
+    content: "\f0c4";
+}
+
+.docmana-icon-copy:before {
+    content: "\f0c5";
+}
+
+.docmana-icon-paste:before {
+    content: "\f0ea";
+}
+
+.docmana-icon-rm:before {
+    content: "\f00d";
+}
+
+.docmana-icon-listview:before {
+    content: "\f0ca";
+}
+
+.docmana-icon-iconsview:before {
+    content: "\f03e";
+}

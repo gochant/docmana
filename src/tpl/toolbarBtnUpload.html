@@ -1,0 +1,7 @@
+<a class="btn btn-default <%- data.name %>" data-command="<%- data.name %>"
+    title="<%- L('cmd' + _.upperFirst(data.name)) %>">
+    <i class="<%- data.icon %>"></i>
+    <form enctype="multipart/form-data" method="POST">
+        <input type="file" name="upload[]" multiple value="" />
+    </form>
+</a>

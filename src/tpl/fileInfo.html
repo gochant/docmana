@@ -1,0 +1,26 @@
+<div class="docmana-file-info">
+    <div class="media center-block">
+        <div class="media-left file-type-large">
+            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %>"></span>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">
+                <%- data.name%>
+            </h4>
+            <p>
+            <p>
+                <%- L('fileType') %>:
+                <%- L('kind' + T.mime2Type(data.mime)) %>
+            </p>
+            <p>
+                <%- L('fileDateModified') %>:
+                <%- T.formatDate(data.ts) %>
+            </p>
+            <p>
+                <%- L('fileSize') %>:
+                <%- T.formatFileSize(data.size) %>
+            </p>
+            </p>
+        </div>
+    </div>
+</div>

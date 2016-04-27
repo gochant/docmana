@@ -1,0 +1,9 @@
+<div id="<%- data.hash %>"
+     title="<%= T.fileMetadata(data) %>"
+     class="drag-block file-list-item <%- T.mime2Class(data.mime) %>"
+     data-name="<%- data.name %>">
+    <div class="filetype <%- T.name2IconClass(data.name, data.mime)%> drag-block"></div>
+    <div class="filename drag-block" title="<%- data.name %>">
+        <%- data.name %>
+    </div>
+</div>
