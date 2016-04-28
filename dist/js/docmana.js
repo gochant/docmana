@@ -5827,7 +5827,7 @@ function log() {
         workzone:{
             layout: 'list'
         },
-        ui: ['workzone', 'toolbar', 'navigation', 'statusbar', 'viewer'],
+        ui: ['workzone', 'toolbar', 'navigation', 'statusbar', 'viewer', 'uploader'],
         kernel: ['store', 'history', 'clipboard']
     }
 
@@ -6096,16 +6096,15 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
 
 (function () {
     "use strict";
-
-    docmana.templateHelper = {
-        formatDate: function (unixTs, format) {
-            var date = new Date(unixTs * 1000);
-            format || (format = 'yyyy/mm/dd HH:MM');
-
-            return date.format(format);
-            //return date.toLocaleDateString(docmana.lang) + ' ' + date.toLocaleTimeString(docmana.lang, {
-            //    hour12: false
-            //});
+    docmana.utils = {
+        // 格式化字符串，类似 C# string.format
+        formatString: function () {
+            var s = arguments[0];
+            for (var i = 0; i < arguments.length - 1; i++) {
+                var reg = new RegExp("\\{" + i + "\\}", "gm");
+                s = s.replace(reg, arguments[i + 1]);
+            }
+            return s;
         },
         formatFileSize: function (bytes, onlyKb, si) {
             if (si == null) si = true;
@@ -6136,45 +6135,104 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
 
             return bytes.toFixed(fixed) + ' ' + units[u];
         },
-        // deprecate
-        _mime2ClassDep: function (mime) {
-            var prefix = 'ico-';
 
-            mime = mime.split('/');
+        fileNameExtension: function (filename) {
+            return '.' + filename.split('.').pop();
+        },
+        unixTimestamp: function () {
+            return Math.round(new Date().getTime() / 1000);
+        },
+        selectSelectableElement: function (selectableContainer, elementsToSelect) {
+            $(".ui-selected", selectableContainer)
+                .not(elementsToSelect).removeClass("ui-selected ui-selectee").addClass("ui-unselecting");
 
-            return prefix + mime[0] + (mime[0] !== 'image' && mime[1] ? ' ' + prefix + mime[1].replace(/(\.|\+)/g, '-') : '');
+            $(elementsToSelect).addClass("ui-selecting ui-selectee");
+
+            var selectable = selectableContainer.data("ui-selectable");
+            selectable._mouseStop(null);
         },
-        name2IconClass: function (name, mime) {
-            if (mime === 'directory') {
-                return 'icon-folder';
+
+        setInputSelection: function (input, startPos, endPos) {
+            input.focus();
+            if (typeof input.selectionStart != "undefined") {
+                input.selectionStart = startPos;
+                input.selectionEnd = endPos;
+            } else if (document.selection && document.selection.createRange) {
+                // IE branch
+                input.select();
+                var range = document.selection.createRange();
+                range.collapse(true);
+                range.moveEnd("character", endPos);
+                range.moveStart("character", startPos);
+                range.select();
             }
-            var parts = name.split('.');
-            var prefix = 'icon-';
-            return prefix + parts[parts.length - 1];
         },
-        mime2Class: function (mime) {
-            if (mime === 'directory') {
-                return 'type-directory';
+        setInputSelectionWithoutExtension: function ($input) {
+            var val = $input.val();
+            var endIdx = val.lastIndexOf('.');
+            endIdx = endIdx > 0 ? endIdx : val.length;
+
+            docmana.utils.setInputSelection($input[0], 0, endIdx);
+
+        },
+        inlineEdit: function ($el, callback, mode, isForce) {  // mode: 0: 横向，1： 纵向
+            if (mode == null) mode = 0;
+            if (isForce == null) isForce = false;
+            var originVal = _.trim($el.text());
+            var $editor;
+
+            if (mode === 0) {
+                $editor = $('<input name="temp" type="text" class="inline-edit" />').autosizeInput();
+            } else {
+                $editor = $('<textarea name="temp" class="inline-edit" tabindex="2"></textarea>');
             }
-            return 'type-file';
-        },
-        mime2Type: function (mime) {
-            return docmana.mimeTypes[mime];
-        },
-        fileMetadata: function (data) {
-            var lang = docmana.resource;
-            var strs = [];
-            strs.push(data.name);
-            strs.push(lang('Type') + ': ' + lang('kind' + this.mime2Type(data.mime)));
-            if (data.mime !== 'directory') {
-                strs.push(lang('Size') + ': ' + this.formatFileSize(data.size));
+            $editor
+                .val(originVal)
+
+                //.on('change keyup keydown paste cut', function () {
+                //    if (mode === 0) {
+                //        debugger;
+                //        $(this).width($(this).val().length * 13 + 20);
+                //    } else {
+                //        $(this).height(this.scrollHeight);
+                //    }
+                //})
+                .on('keydown', function (e) {
+                    if (e.keyCode === 13) {
+                        e.preventDefault();
+                        $(this).blur();
+                    }
+                });
+
+            // 初始化高度
+            if (mode === 0) {
+                $editor.width($el.outerWidth() + 30);
+            } else {
+                $editor.height($el.outerHeight());
             }
-            strs.push(lang('Date modified') + ': ' + this.formatDate(data.ts));
-            return strs.join(' &#13; ');
+
+            docmana.utils.setInputSelectionWithoutExtension($editor);
+
+            $el.hide();
+            $el.after($editor);
+            // $editor.show();
+            $editor.focus();
+
+            $editor.on('blur', function () {
+                var val = $(this).val();
+                if (isForce || (val !== "" && originVal !== val)) {
+                    $el.text(val);
+                    callback(val);
+                }
+
+                $(this).remove();
+                $el.show();
+            });
         }
-    };
+    }
 
 })();
+
 
 
 (function () {
@@ -6191,10 +6249,14 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
         },
         templateName: 'main',
         defaults: {
-            autoRender:true
+            autoRender: true,
+            className: 'static panel-default no-margin'
         },
         listen: function () {
             this.listenTo(this, 'rendered', function () {
+                this.$el.attr('tabindex', 1)
+                    .addClass('docmana panel')
+                    .addClass(this.props.className);
                 this._initUI();
                 this.startup();
                 var that = this;
@@ -6217,8 +6279,6 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                     'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
                     'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
                 });
-
-                this.$('.datatable-content')
             }
         },
         _initKernel: function () {
@@ -6271,6 +6331,7 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             }
         },
         startup: function () {
+            this.trigger('started');
             this.store.open(null, 1);
         }
     });
@@ -6795,13 +6856,16 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             return $form.ajaxSubmit({
                 url: this.url(),
                 dataType: "json",
-                data: this._getRequestParams({
-                    cmd: 'upload',
-                    target: this.cwd().hash
-                }),
+                data: this.uploadParams(),
                 success: function (resp) {
                     that.trigger('sync', resp);
                 }
+            });
+        },
+        uploadParams: function() {
+            return this._getRequestParams({
+                cmd: 'upload',
+                target: this.cwd().hash
             });
         },
         // 删除
@@ -6898,117 +6962,6 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
     docmana.template.load(docmana.templates);
 
 })();
-
-
-(function () {
-    "use strict";
-    docmana.utils = {
-        // 格式化字符串，类似 C# string.format
-        formatString: function () {
-            var s = arguments[0];
-            for (var i = 0; i < arguments.length - 1; i++) {
-                var reg = new RegExp("\\{" + i + "\\}", "gm");
-                s = s.replace(reg, arguments[i + 1]);
-            }
-            return s;
-        },
-        fileNameExtension: function (filename) {
-            return '.' + filename.split('.').pop();
-        },
-        unixTimestamp: function () {
-            return Math.round(new Date().getTime() / 1000);
-        },
-        selectSelectableElement: function (selectableContainer, elementsToSelect) {
-            $(".ui-selected", selectableContainer)
-                .not(elementsToSelect).removeClass("ui-selected ui-selectee").addClass("ui-unselecting");
-
-            $(elementsToSelect).addClass("ui-selecting ui-selectee");
-
-            var selectable = selectableContainer.data("ui-selectable");
-            selectable._mouseStop(null);
-        },
-
-        setInputSelection: function (input, startPos, endPos) {
-            input.focus();
-            if (typeof input.selectionStart != "undefined") {
-                input.selectionStart = startPos;
-                input.selectionEnd = endPos;
-            } else if (document.selection && document.selection.createRange) {
-                // IE branch
-                input.select();
-                var range = document.selection.createRange();
-                range.collapse(true);
-                range.moveEnd("character", endPos);
-                range.moveStart("character", startPos);
-                range.select();
-            }
-        },
-        setInputSelectionWithoutExtension: function ($input) {
-            var val = $input.val();
-            var endIdx = val.lastIndexOf('.');
-            endIdx = endIdx > 0 ? endIdx : val.length;
-
-            docmana.utils.setInputSelection($input[0], 0, endIdx);
-
-        },
-        inlineEdit: function ($el, callback, mode, isForce) {  // mode: 0: 横向，1： 纵向
-            if (mode == null) mode = 0;
-            if (isForce == null) isForce = false;
-            var originVal = _.trim($el.text());
-            var $editor;
-
-            if (mode === 0) {
-                $editor = $('<input name="temp" type="text" class="inline-edit" />').autosizeInput();
-            } else {
-                $editor = $('<textarea name="temp" class="inline-edit" tabindex="2"></textarea>');
-            }
-            $editor
-                .val(originVal)
-
-                //.on('change keyup keydown paste cut', function () {
-                //    if (mode === 0) {
-                //        debugger;
-                //        $(this).width($(this).val().length * 13 + 20);
-                //    } else {
-                //        $(this).height(this.scrollHeight);
-                //    }
-                //})
-                .on('keydown', function (e) {
-                    if (e.keyCode === 13) {
-                        e.preventDefault();
-                        $(this).blur();
-                    }
-                });
-
-            // 初始化高度
-            if (mode === 0) {
-                $editor.width($el.outerWidth() + 30);
-            } else {
-                $editor.height($el.outerHeight());
-            }
-
-            docmana.utils.setInputSelectionWithoutExtension($editor);
-
-            $el.hide();
-            $el.after($editor);
-            // $editor.show();
-            $editor.focus();
-
-            $editor.on('blur', function () {
-                var val = $(this).val();
-                if (isForce || (val !== "" && originVal !== val)) {
-                    $el.text(val);
-                    callback(val);
-                }
-
-                $(this).remove();
-                $el.show();
-            });
-        }
-    }
-
-})();
-
 
 
 (function ($) {
@@ -7233,6 +7186,60 @@ var Plugins;
     })(jQuery);
 })(Plugins || (Plugins = {}));
 
+
+
+(function () {
+    "use strict";
+
+    docmana.templateHelper = _.extend( {
+        formatDate: function (unixTs, format) {
+            var date = new Date(unixTs * 1000);
+            format || (format = 'yyyy/mm/dd HH:MM');
+
+            return date.format(format);
+            //return date.toLocaleDateString(docmana.lang) + ' ' + date.toLocaleTimeString(docmana.lang, {
+            //    hour12: false
+            //});
+        },
+        // deprecate
+        _mime2ClassDep: function (mime) {
+            var prefix = 'ico-';
+
+            mime = mime.split('/');
+
+            return prefix + mime[0] + (mime[0] !== 'image' && mime[1] ? ' ' + prefix + mime[1].replace(/(\.|\+)/g, '-') : '');
+        },
+        name2IconClass: function (name, mime) {
+            if (mime === 'directory') {
+                return 'icon-folder';
+            }
+            var parts = name.split('.');
+            var prefix = 'icon-';
+            return prefix + parts[parts.length - 1];
+        },
+        mime2Class: function (mime) {
+            if (mime === 'directory') {
+                return 'type-directory';
+            }
+            return 'type-file';
+        },
+        mime2Type: function (mime) {
+            return docmana.mimeTypes[mime];
+        },
+        fileMetadata: function (data) {
+            var lang = docmana.resource;
+            var strs = [];
+            strs.push(data.name);
+            strs.push(lang('Type') + ': ' + lang('kind' + this.mime2Type(data.mime)));
+            if (data.mime !== 'directory') {
+                strs.push(lang('Size') + ': ' + this.formatFileSize(data.size));
+            }
+            strs.push(lang('Date modified') + ': ' + this.formatDate(data.ts));
+            return strs.join(' &#13; ');
+        }
+    }, docmana.utils);
+
+})();
 
 
 (function () {
@@ -7794,17 +7801,27 @@ var Plugins;
         init: function (options) {
             this.name = commandName;
             this.templateName = 'toolbarBtnUpload';
-            this.icon = 'fa fa-upload';
         },
         listen: function () {
-            this.listenTo(this, 'rendered', function () {
+            this.listenTo(this.main(), 'started', function () {
                 var that = this;
-                this.$el.find(':file').on('change', function () {
-                    var val = $(this).val();
-                    if (val === "" || val == null) return;
-                
-                    that.store().upload($(this).closest('form'));
-                });
+                var $file = this.$el.find(':file');
+                var uploader = this.main().ui.uploader;
+                // ����� jquery file upload �ؼ������ʼ�� uploader ����
+                if ($.fileupload && uploader) {
+                    uploader.build($file);
+                } else {
+                    $file.on('change', function () {
+                        var val = $(this).val();
+                        if (val === "" || val == null) return;
+                        // ͨ�� jquery.form �ύ
+                        that.store().upload($(this).closest('form'));
+                    });
+                }
+            });
+            this.listenTo(this, 'rendered', function () {
+          
+
             });
         },
         enable: function () {
@@ -8125,6 +8142,131 @@ var Plugins;
 
     docmana.ui.toolbar = function (options) {
         return new Toolbar(options);
+    }
+})();
+
+
+(function () {
+    "use strict";
+
+    // 当前工作目录界面
+
+    var Uploader = docmana.ViewBase.extend({
+        init: function() {
+        },
+        events: {
+            'click .cancel': '_cancelHandler'
+        },
+        listen: function () {
+            this.listenTo(this.main(), 'start', function() {
+                // 设置触发器
+            });
+        },
+        inputInstance: function() {
+            return this.$input.data('blueimp-fileupload') || this.$input.data('fileupload');
+        },
+        $filesContainer: function() {
+            return this.$('.files');
+        },
+        build: function ($fileInput) {
+            var that = this;
+            var tplFile = this.tpl('uploaderFiles');
+            var formatFileSize = docmana.utils.formatFileSize;
+
+            this.$input = $fileInput;
+
+            this.$input.fileupload({
+                url: this.store().url(),
+                formData: this.store().uploadParams(),
+                dataType: 'json',
+                add: function(e, data) {
+                    if (e.isDefaultPrevented()) {
+                        return false;
+                    }
+                    var $this = $(this);
+                    var instance = that.inputInstance();
+                    var options = that.options;
+
+                    data.context = $(tplFile({
+                        files: data.files,
+                        options: options
+                    })).data('data', data).addClass('processing');
+
+                    that.$filesContainer().append(data.context);
+
+                    data.process().always(function() {
+                        data.context.each(function(index) {
+                            $(this).find('.size').text(
+                                formatFileSize(data.files[index].size)
+                            );
+                        }).removeClass('processing');
+                        // that._renderPreviews(data);
+                    }).done(function() {
+                        data.context.find('.start').prop('disabled', false);
+
+                        if ((instance._trigger('added', e, data) !== false) &&
+                            (options.autoUpload || data.autoUpload) &&
+                            data.autoUpload !== false) {
+                            data.submit();
+                        }
+                    }).fail(function() {
+                        if (data.files.error) {
+                            data.context.each(function(index) {
+                                var error = data.files[index].error;
+                                if (error) {
+                                    $(this).find('.status').text(error);
+                                }
+                            });
+                        }
+                    });
+                },
+                progressall: function(e, data) {
+                    //var progress = parseInt(data.loaded / data.total * 100, 10);
+                    //$('#progress .bar').css(
+                    //    'width',
+                    //    progress + '%'
+                    //);
+                },
+                progress: function(e, data) {
+                    if (e.isDefaultPrevented()) {
+                        return false;
+                    }
+                    var progress = Math.floor(data.loaded / data.total * 100);
+                    if (data.context) {
+                        data.context.each(function() {
+                            $(this).find('.progress')
+                                .attr('aria-valuenow', progress)
+                                .children().first().css(
+                                    'width',
+                                    progress + '%'
+                                );
+                        });
+                    }
+                },
+                done: function(e, data) {
+                    debugger;
+                    $.each(data.result.added, function(index, file) {
+                        $('<p/>').text(file.name).appendTo(document.body);
+                    });
+                }
+            });
+        },
+        _cancelHandler: function (e) {
+            e.preventDefault();
+            var $file = $(e.currentTarget).closest('.file-upload,.file-download');
+            var data = $file.data('data') || {};
+            data.context = data.context || $file;
+            if (data.abort) {
+                data.abort();
+            } else {
+                data.errorThrown = 'abort';
+                this.trigger('fail', e, data);
+            }
+        }
+    });
+
+    docmana.ui.uploader = function (options) {
+        return new Uploader(options);
     }
 })();
 

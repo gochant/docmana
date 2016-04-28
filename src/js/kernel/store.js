@@ -199,13 +199,16 @@
             return $form.ajaxSubmit({
                 url: this.url(),
                 dataType: "json",
-                data: this._getRequestParams({
-                    cmd: 'upload',
-                    target: this.cwd().hash
-                }),
+                data: this.uploadParams(),
                 success: function (resp) {
                     that.trigger('sync', resp);
                 }
+            });
+        },
+        uploadParams: function() {
+            return this._getRequestParams({
+                cmd: 'upload',
+                target: this.cwd().hash
             });
         },
         // 删除

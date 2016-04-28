@@ -1,0 +1,10 @@
+﻿[
+  {
+    "outputFile": "demo/upload.css",
+    "inputFile": "demo/upload.less"
+  },
+  {
+    "outputFile": "src/less/docmana.css",
+    "inputFile": "src/less/docmana.less"
+  }
+]

@@ -30,7 +30,7 @@
         workzone:{
             layout: 'list'
         },
-        ui: ['workzone', 'toolbar', 'navigation', 'statusbar', 'viewer'],
+        ui: ['workzone', 'toolbar', 'navigation', 'statusbar', 'viewer', 'uploader'],
         kernel: ['store', 'history', 'clipboard']
     }
 

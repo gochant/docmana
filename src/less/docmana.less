@@ -1,4 +1,5 @@
-﻿@import "icon.less";
+﻿@import "file-icon.less";
+@import "uploader.less";
 
 @hover-bg-color: #E5F3FF;
 @hover-border-color: #E5F3FF;
@@ -79,12 +80,18 @@
         height: 100%;
     }
 
-    .list-view > .datatable-content {
-        position: absolute;
-        bottom: 0;
-        top: 32px;
-        overflow: auto;
-        overflow-y: scroll;
+
+
+    .list-view {
+        overflow: hidden;
+
+        > .datatable-content {
+            position: absolute;
+            bottom: 0;
+            top: 32px;
+            overflow: auto;
+            overflow-y: scroll;
+        }
     }
 }
 

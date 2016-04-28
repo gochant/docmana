@@ -15,7 +15,7 @@ var paths = {
         'src/js/docmana.js',
         'src/js/templates.js',
         'src/js/kernel/core.js',
-        'src/js/kernel/templateHelper.js',
+        'src/js/kernel/utils.js',
         'src/js/kernel/app.js',
         'src/js/kernel/clipboard.js',
         'src/js/kernel/history.js',
@@ -23,8 +23,8 @@ var paths = {
         'src/js/kernel/resource.js',
         'src/js/kernel/store.js',
         'src/js/kernel/template.js',
-        'src/js/kernel/utils.js',
         'src/js/kernel/plugins.js',
+        'src/js/kernel/templateHelper.js',
         'src/js/commands/**/*.js',
         'src/js/ui/**/*.js',
         'src/js/i18n/**/*.js'

@@ -12,10 +12,14 @@
         },
         templateName: 'main',
         defaults: {
-            autoRender:true
+            autoRender: true,
+            className: 'static panel-default no-margin'
         },
         listen: function () {
             this.listenTo(this, 'rendered', function () {
+                this.$el.attr('tabindex', 1)
+                    .addClass('docmana panel')
+                    .addClass(this.props.className);
                 this._initUI();
                 this.startup();
                 var that = this;
@@ -38,8 +42,6 @@
                     'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
                     'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
                 });
-
-                this.$('.datatable-content')
             }
         },
         _initKernel: function () {
@@ -92,6 +94,7 @@
             }
         },
         startup: function () {
+            this.trigger('started');
             this.store.open(null, 1);
         }
     });
