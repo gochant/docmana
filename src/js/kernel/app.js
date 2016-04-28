@@ -29,7 +29,7 @@
             });
         },
         relayout: function () {
-          
+
             if (this.$el.hasClass('static')) {
                 this.$('.docmana-body').css({
                     top: this.$('.docmana-heading').outerHeight(),
@@ -61,8 +61,8 @@
                 }, that.props[name]));
             });
 
-            this.$el.on('focus', function() {
-              //  that.ui.workzone && that.ui.workzone.$el.focus();
+            this.$el.on('focus', function () {
+                //  that.ui.workzone && that.ui.workzone.$el.focus();
             });
         },
         _initCommands: function () {
@@ -71,7 +71,7 @@
 
                 if (_.isArray(cmds)) {
 
-                    _.forEach(cmds, function(cmd) {
+                    _.forEach(cmds, function (cmd) {
                         var instance = docmana.commands[cmd]({
                             main: that
                         });
@@ -79,7 +79,7 @@
                         that.commands[cmd] = instance;
                     });
                 }
-               
+
             });
         },
         command: function (name) {
@@ -94,6 +94,7 @@
             }
         },
         startup: function () {
+            var a = this.$el[0].outerWidth;
             this.trigger('started');
             this.store.open(null, 1);
         }

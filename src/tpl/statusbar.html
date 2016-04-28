@@ -1,11 +1,5 @@
-<span class="text-total">
-    <%- data.count %>
-    <%- L('statusbarItems') %>
-</span>
-<span class="text-selected">
-    <% if(data.selectedCount > 0){ %>
-    <%- L('statusbarSelectedItem', data.selectedCount) %>
-    <%- data.selectedSize %>
-
-    <% } %>
-</span>
+<div class="status-text pull-left"></div>
+<div class="pull-right btn-toolbar">
+    <div class="uploader btn-group"></div>
+    <div class="layout btn-group"></div>
+</div>

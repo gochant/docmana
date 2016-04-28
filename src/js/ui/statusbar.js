@@ -7,20 +7,27 @@
     var Statusbar = docmana.CommandContainer.extend({
         templateName: 'statusbar',
         defaults: {
-            commands: ['layout']
+            autoRender: true,
+            commands: [{
+                name: 'layout',
+                to: '.layout'
+            }]
         },
         listen: function () {
             this.listenTo(this.store(), 'update', function () {
-                this.render();
+                this.updateStatus();
             });
             this.listenTo(this.workzone(), 'selected', function () {
-                this.render();
+                this.updateStatus();
             });
             this.listenTo(this, 'rendered', function () {
                 this._renderCommands();
             });
         },
-        getState: function () {
+        updateStatus: function () {
+            this.$('.status-text').html(this.tpl('statusbarText')(this.getStatus()));
+        },
+        getStatus: function () {
             var data = this.store().cwdData();
             var selectedIds = this.workzone().getIds();
             var selectedSize = _.reduce(_.map(this.store().byIds(selectedIds), function (item) {

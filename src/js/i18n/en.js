@@ -34,6 +34,9 @@
         'textSearch': 'Search...',
         'textPreviousItem': 'previous item',
         'textNextItem': 'next item',
+        'textFileUpload': 'File uploader',
+        'textClose': 'Close',
+
         'labelLanguage': 'Language: ',
         'labelTheme': 'Theme: ',
 

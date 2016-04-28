@@ -1,8 +1,14 @@
-<div class="uploader panel panel-default">
-    <div class="panel-heading">
-        <div class="panel-title">文件上传</div>
-    </div>
-    <div class="panel-body">
-        <div class="files list-group"></div>
-    </div>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title"><%- L('textFileUpload') %></h4>
+</div>
+<div class="modal-body no-padding">
+    <div class="files list-group"></div>
+</div>
+<div class="modal-footer clearfix">
+    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">
+        <%- L('textClose') %>
+    </button>
 </div>

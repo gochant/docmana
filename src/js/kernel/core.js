@@ -38,6 +38,9 @@
         toolbar: function () {
             return this.main().ui.toolbar;
         },
+        statusbar: function(){
+            return this.main().ui.statusbar;
+        },
         workzone: function () {
             return this.main().ui.workzone;
         },

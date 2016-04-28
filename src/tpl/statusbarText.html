@@ -1,0 +1,13 @@
+<span class="text-total">
+    <%- data.count %>
+    <%- L('statusbarItems') %>
+</span>
+<span class="text-selected">
+    <% if(data.selectedCount > 0){ %>
+    <%- L('statusbarSelectedItem', data.selectedCount) %>
+
+    <span class="size">
+        <%- data.selectedSize %>
+    </span>
+    <% } %>
+</span>

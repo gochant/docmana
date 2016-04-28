@@ -34,6 +34,9 @@
         'textSearch': '搜索...',
         'textPreviousItem': '前一项',
         'textNextItem': '后一项',
+        'textFileUpload': '文件上传',
+        'textClose': '关闭',
+
         'labelLanguage': '语言：',
         'labelTheme': '主题：',
 

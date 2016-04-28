@@ -1,4 +1,5 @@
-﻿@import "file-icon.less";
+﻿@import "icons.less";
+@import "file-icon.less";
 @import "uploader.less";
 
 @hover-bg-color: #E5F3FF;
@@ -10,6 +11,14 @@
 
 .no-margin {
     margin: 0;
+}
+
+.badge-notify {
+    background: red;
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    z-index: 3;
 }
 
 .modal-dialog.static {
@@ -130,6 +139,11 @@
             }
         }
 
+        &:hover {
+            background: @hover-bg-color;
+            border-color: @hover-border-color;
+        }
+
         &.ui-selecting {
             background: #CCE8FF;
             border: solid 1px #A6D7FF;
@@ -217,11 +231,6 @@
             width: 100px;
             padding: 0;
             margin: 0 5px 5px 0;
-
-            &:hover {
-                background: @hover-bg-color;
-                border-color: @hover-border-color;
-            }
 
             .filetype {
                 display: block;
@@ -463,71 +472,12 @@
     }
 }
 
-.docmana-icon {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
+.docmana-uploader {
+    .files {
+        min-height: 200px;
 
-.docmana-icon-refresh:before {
-    content: "\f021";
-}
-
-.docmana-icon-sort:before {
-    content: "\f034";
-}
-
-.docmana-icon-rename:before {
-    content: "\f033";
-}
-
-.docmana-icon-duplicate:before {
-    content: "\f0db";
-}
-
-.docmana-icon-mkdir:before {
-    content: "\f07b";
-}
-
-.docmana-icon-download:before {
-    content: "\f019";
-}
-
-.docmana-icon-back:before {
-    content: "\f060";
-}
-
-.docmana-icon-forward:before {
-    content: "\f061";
-}
-
-.docmana-icon-open:before {
-    content: "\f115";
-}
-
-.docmana-icon-cut:before {
-    content: "\f0c4";
-}
-
-.docmana-icon-copy:before {
-    content: "\f0c5";
-}
-
-.docmana-icon-paste:before {
-    content: "\f0ea";
-}
-
-.docmana-icon-rm:before {
-    content: "\f00d";
-}
-
-.docmana-icon-listview:before {
-    content: "\f0ca";
-}
-
-.docmana-icon-iconsview:before {
-    content: "\f03e";
+        .file {
+            position: relative;
+        }
+    }
 }

@@ -6,6 +6,13 @@
     var Uploader = docmana.ViewBase.extend({
         templateName: 'uploader',
         init: function () {
+            var that = this;
+            this.parentDialog().on('shown.bs.modal', function () {
+
+            }).on('hidden.bs.modal', function () {
+                // that.$body().html('');
+                that.main().$el.focus();  // 重设焦点
+            });
         },
         defaults: {
             autoRender: true
@@ -14,15 +21,54 @@
             'click .cancel': '_cancelHandler'
         },
         listen: function () {
-            this.listenTo(this.main(), 'start', function () {
+            this.listenTo(this.main(), 'started', function () {
                 // 设置触发器
+                var that = this;
+                var statusbar = this.statusbar();
+                var $btn = $(this.tpl('uploaderTrigger')());
+                if (statusbar) {
+                    $btn.on('click', function () {
+                        that.parentDialog().modal('show');
+                    }).appendTo(statusbar.$('.uploader'));
+                    that.$trigger = $btn;
+                }
+            });
+            this.listenTo(this, 'rendered', function () {
+                this.parentDialog().modal({
+                    show: false
+                });
             });
         },
+        parentDialog: function () {
+            return this.$element().closest('.modal');
+        },
         inputInstance: function ($input) {
+            $input = $input || this.$input;
             return $input.data('blueimp-fileupload') || $input.data('fileupload');
         },
-        $filesContainer: function () {
+        $body: function () {
             return this.$('.files');
+        },
+        updateBadge: function () {
+            var count = this.count();
+            var $badge = this.$trigger.find('.badge');
+            $badge.text(count);
+            if (count === 0) {
+                $badge.hide();
+            } else {
+                $badge.show();
+            }
+        },
+        count: function(){
+            var count = this.$('.file').length;
+            return count;
+        },
+        updateDialogDisplay: function(){
+            if (this.count() === 0) {
+                this.parentDialog().modal('hide');
+            } else {
+                this.parentDialog().modal('show');
+            }
         },
         build: function ($fileInput) {
             var that = this;
@@ -32,13 +78,19 @@
             $fileInput.fileupload({
                 url: this.store().url(),
                 formData: function () {
-                    return that.store().uploadParams();
+                    return _.map(that.store().uploadParams(), function (value, key) {
+                        return {
+                            name: key,
+                            value: value
+                        }
+                    });
                 },
                 dataType: 'json',
                 add: function (e, data) {
                     if (e.isDefaultPrevented()) {
                         return false;
                     }
+
                     var $this = $(this);
                     var instance = that.inputInstance($this);
                     var options = instance.options;
@@ -48,7 +100,10 @@
                         options: options
                     })).data('data', data).addClass('processing');
 
-                    that.$filesContainer().append(data.context);
+                    that.$body().append(data.context);
+
+                    that.updateBadge();
+                    that.updateDialogDisplay();
 
                     data.process().always(function () {
                         data.context.each(function (index) {
@@ -76,13 +131,6 @@
                         }
                     });
                 },
-                progressall: function (e, data) {
-                    //var progress = parseInt(data.loaded / data.total * 100, 10);
-                    //$('#progress .bar').css(
-                    //    'width',
-                    //    progress + '%'
-                    //);
-                },
                 progress: function (e, data) {
                     if (e.isDefaultPrevented()) {
                         return false;
@@ -96,17 +144,40 @@
                                     'width',
                                     progress + '%'
                                 );
+                            $(this).find('.status > .percent').text(progress + '%');
                         });
                     }
                 },
+                fail: function (e, data) {
+                    //if (e.isDefaultPrevented()) {
+                    //    return false;
+                    //}
+                    //var instance = that.inputInstance($(this));
+                    //if (data.context) {
+                    //    data.context.each(function (index) {
+                    //        if (data.errorThrown !== 'abort') {
+                    //            var file = data.files[index];
+                    //            file.error = file.error || data.errorThrown;
+                    //            $(this).find('.folder').text(file.error);
+                    //        } else {
+                    //            $(this).remove();
+                    //            instance._trigger('failed', e, data);
+                    //            instance._trigger('finished', e, data);
+                    //        }
+                    //    });
+                    //}
+                    //that.updateDialogDisplay();
+
+                },
                 done: function (e, data) {
-                    debugger;
-                    $.each(data.result.added, function (index, file) {
-                        $('<p/>').text(file.name).appendTo(document.body);
-                    });
+                    data.context.remove();
+                    that.updateBadge();
+                    that.updateDialogDisplay();
+                    that.store().trigger('sync', data.result);
                 }
             });
 
+            // TODO: 为什么在 fileupload add 方法内获取 that.$input 不正确
             this.$input = $fileInput;
         },
         _cancelHandler: function (e) {
