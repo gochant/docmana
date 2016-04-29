@@ -9,6 +9,7 @@ var htmlToJs = require('gulp-html-to-js');
 var less = require('gulp-less');
 var cssmin = require('gulp-cssmin');
 var copy = require('gulp-contrib-copy');
+var webserver = require('gulp-webserver');
 
 var paths = {
     scripts: [
@@ -69,6 +70,15 @@ gulp.task('less', ['clean'], function () {
         .pipe(rename({ suffix: '.min' }))
         .pipe(cssmin())
         .pipe(gulp.dest('dist/css'));
+});
+
+gulp.task('webserver', function() {
+  gulp.src('./')
+    .pipe(webserver({
+      livereload: true,
+      directoryListing: true,
+      open: true
+    }));
 });
 
 

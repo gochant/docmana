@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Docmana</title>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -11,12 +12,17 @@
             padding: 20px 0;
             font-family: Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
         }
-
+        
         .navbar-form .form-group {
             margin-left: 10px;
         }
+        
+        .navbar-brand .version {
+            font-size: 60%;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <nav class="navbar navbar-default">
@@ -24,6 +30,7 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
                         Docmana
+                        <small class="version"></small>
                     </a>
                 </div>
                 <form class="navbar-form navbar-right form-inline">
@@ -55,80 +62,7 @@
     <script src="assets/jquery.noty.packaged.js"></script>
     <script src="assets/jquery.iframe-transport.js"></script>
     <script src="assets/jquery.fileupload.js"></script>
-
-    <script>
-        $(function () {
-
-
-
-            function setLocal(key, value) {
-                if (window.localStorage) {
-                    localStorage.setItem(key, value);
-                }
-            }
-
-            function getLocal(key) {
-                if (window.localStorage) {
-                    return localStorage.getItem(key);
-                }
-                return null;
-            }
-
-            var initData = {
-                lang: getLocal('lang') || 'en',
-                theme: getLocal('theme') || 0
-            }
-
-
-
-            docmana.lang = initData.lang;
-
-            // 这里仅针对这个示例界面简单处理
-            $('.txt-lang').text(docmana.resource('labelLanguage'));
-            $('.txt-theme').text(docmana.resource('labelTheme'));
-
-            var themes = ['default', 'cerulean', 'cosmo', 'darkly', 'flatly', 'lumen', 'paper',
-                'sandstone', 'simplex', 'spacelab', 'superhero', 'tiny'];
-            var $select = $("#select-theme");
-            var $selectLang = $('#select-lang');
-
-            $.each(themes, function (index, value) {
-                $select.append($("<option />")
-                    .val(index)
-                    .text(value));
-            });
-
-            $selectLang.on('change', function () {
-                var val = $(this).val();
-                setLocal('lang', val);
-                window.location.reload();
-            }).val(initData.lang);
-
-            $select.on('change', function () {
-                var val = $(this).val();
-                var theme = themes[val];
-                var css = 'assets/bootstrap/themes/' + theme + '.css';
-                setLocal('theme', val);
-                $("#theme-style").attr("href", css);
-                setTimeout(function () {
-                    $('#docmana').data('docmana').relayout();
-                }, 500);
-            }).val(initData.theme).change();
-
-
-            $('#docmana').docmana({
-                store: {
-                    requestData: {
-                        folder: 'Medias',
-                        lang: docmana.lang
-                    },
-                    url: 'http://192.168.1.18:8097/FileManager/Medias/Index'
-                },
-                workzone: {
-                    layout: 'icons'
-                }
-            });
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
+
 </html>
