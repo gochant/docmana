@@ -57,6 +57,12 @@
 .docmana-icon-upload:before {
   content: "\f093";
 }
+.docmana-icon-fullscreen:before {
+  content: "\f066";
+}
+.docmana-icon-normal:before {
+  content: "\f065";
+}
 .docmana {
   /*微信文章*/
   /*20131217 new*/
@@ -862,6 +868,9 @@
   height: 100%;
   border-radius: 0;
 }
+.docmana-uploader .files .info {
+  display: table;
+}
 .docmana-uploader .files .progress-bar {
   opacity: .3;
 }
@@ -871,22 +880,21 @@
 }
 .docmana-uploader .files .info {
   background-color: transparent;
-  /*.folder {
-                width: 24%;
-            }*/
 }
 .docmana-uploader .files .info .name {
-  width: 60%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.docmana-uploader .files .info .size,
+.docmana-uploader .files .info .size {
+  width: 100px;
+}
 .docmana-uploader .files .info .status {
-  width: 13%;
+  width: 50px;
 }
 .docmana-uploader .files .info .operator {
   width: 50px;
+  text-align: right;
 }
 .no-padding {
   padding: 0;
@@ -894,12 +902,21 @@
 .no-margin {
   margin: 0;
 }
+.table-row {
+  display: table-row;
+}
+.table-row .table-column {
+  display: table-cell;
+}
 .badge-notify {
   background: red;
   position: absolute;
   top: -10px;
   right: -5px;
   z-index: 3;
+}
+.overflow-hidden {
+  overflow: hidden;
 }
 .modal-dialog.static {
   margin: 0 auto;
@@ -926,53 +943,72 @@
   width: 100%;
   bottom: 0;
 }
-.docmana.static {
-  height: 100%;
-  position: relative;
-}
-.docmana.static .docmana-heading {
-  position: absolute;
-  width: 100%;
-  top: 0;
-}
-.docmana.static .docmana-body {
-  position: absolute;
-  width: 100%;
-  /*top: 41px;
-        bottom: 41px;*/
-}
-.docmana.static .docmana-footer {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-}
-.docmana.static .docmana-workzone {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  /*top: 40px;*/
-  overflow: auto;
-}
-.docmana.static .icons-view,
-.docmana.static .list-view {
-  height: 100%;
-}
-.docmana.static .list-view {
-  overflow: hidden;
-}
-.docmana.static .list-view > .datatable-content {
-  position: absolute;
-  bottom: 0;
-  top: 32px;
-  overflow: auto;
-  overflow-y: scroll;
-}
 .docmana {
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-select: none;
   user-select: none;
   outline: none;
+}
+.docmana.static,
+.docmana.fixed {
+  height: 100%;
+}
+.docmana.static .docmana-panel,
+.docmana.fixed .docmana-panel {
+  height: 100%;
+  position: relative;
+}
+.docmana.static .docmana-panel .docmana-heading,
+.docmana.fixed .docmana-panel .docmana-heading {
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+.docmana.static .docmana-panel .docmana-body,
+.docmana.fixed .docmana-panel .docmana-body {
+  position: absolute;
+  width: 100%;
+  /*top: 41px; bottom: 41px;*/
+}
+.docmana.static .docmana-panel .docmana-footer,
+.docmana.fixed .docmana-panel .docmana-footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+.docmana.static .docmana-panel .docmana-workzone,
+.docmana.fixed .docmana-panel .docmana-workzone {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  /*top: 40px;*/
+  overflow: auto;
+}
+.docmana.static .docmana-panel .icons-view,
+.docmana.fixed .docmana-panel .icons-view,
+.docmana.static .docmana-panel .list-view,
+.docmana.fixed .docmana-panel .list-view {
+  height: 100%;
+}
+.docmana.static .docmana-panel .list-view,
+.docmana.fixed .docmana-panel .list-view {
+  overflow: hidden;
+}
+.docmana.static .docmana-panel .list-view > .datatable-content,
+.docmana.fixed .docmana-panel .list-view > .datatable-content {
+  position: absolute;
+  bottom: 0;
+  top: 32px;
+  overflow: auto;
+  overflow-y: scroll;
+}
+.docmana.fixed .docmana-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 .docmana .btn.disabled,
 .docmana .btn[disabled],
@@ -1175,9 +1211,6 @@
   width: 100%;
   height: 100%;
   padding-left: 40px;
-}
-.docmana-toolbar .docmana-group-view {
-  float: right;
 }
 .docmana-toolbar .sort .dropdown-menu {
   right: 0;

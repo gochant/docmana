@@ -13,12 +13,24 @@
     margin: 0;
 }
 
+.table-row {
+    display: table-row;
+
+    .table-column {
+        display: table-cell;
+    }
+}
+
 .badge-notify {
     background: red;
     position: absolute;
     top: -10px;
     right: -5px;
     z-index: 3;
+}
+
+.overflow-hidden {
+    overflow: hidden;
 }
 
 .modal-dialog.static {
@@ -51,65 +63,75 @@
     }
 }
 
-.docmana.static {
-    height: 100%;
-    position: relative;
-
-    .docmana-heading {
-        position: absolute;
-        width: 100%;
-        top: 0;
-    }
-
-    .docmana-body {
-        position: absolute;
-        width: 100%;
-        /*top: 41px;
-        bottom: 41px;*/
-    }
-
-    .docmana-footer {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-    }
-
-    .docmana-workzone {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        /*top: 40px;*/
-        overflow: auto;
-    }
-
-
-
-    .icons-view,
-    .list-view {
-        height: 100%;
-    }
-
-
-
-    .list-view {
-        overflow: hidden;
-
-        > .datatable-content {
-            position: absolute;
-            bottom: 0;
-            top: 32px;
-            overflow: auto;
-            overflow-y: scroll;
-        }
-    }
-}
-
 .docmana {
     -moz-user-select: none;
     -ms-user-select: none;
     -webkit-user-select: none;
     user-select: none;
     outline: none;
+
+
+
+    &.static,
+    &.fixed {
+        height: 100%;
+
+        .docmana-panel {
+            height: 100%;
+            position: relative;
+
+            .docmana-heading {
+                position: absolute;
+                width: 100%;
+                top: 0;
+            }
+
+            .docmana-body {
+                position: absolute;
+                width: 100%;
+                /*top: 41px; bottom: 41px;*/
+            }
+
+            .docmana-footer {
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+            }
+
+            .docmana-workzone {
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+                /*top: 40px;*/
+                overflow: auto;
+            }
+
+            .icons-view,
+            .list-view {
+                height: 100%;
+            }
+
+            .list-view {
+                overflow: hidden;
+
+                > .datatable-content {
+                    position: absolute;
+                    bottom: 0;
+                    top: 32px;
+                    overflow: auto;
+                    overflow-y: scroll;
+                }
+            }
+        }
+    }
+
+    &.fixed .docmana-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+    }
 
     .btn.disabled,
     .btn[disabled],
@@ -365,10 +387,6 @@
                 padding-left: 40px;
             }
         }
-    }
-
-    .docmana-group-view {
-        float: right;
     }
 
     .sort {

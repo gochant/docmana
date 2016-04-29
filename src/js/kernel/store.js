@@ -100,7 +100,7 @@
 
                 this._data = groups['true'].concat(groups['false']);
             } else {
-                this._data = this._baseSortBy();
+                this._data = this._baseSortBy(this._data);
             }
 
             this.trigger('sort', this._sortBy);
@@ -111,9 +111,6 @@
             this.trigger('update', this._data, eventData);
         },
         _baseSortBy: function (list) {
-            if (list == null) {
-                list = this._data;
-            }
             var field = this._sortBy.field;
             var order = this._sortBy.order;
 
@@ -231,8 +228,8 @@
                 data: params,
                 //contentType: "application/json; charset=utf-8",
                 dataType: "json"
-            }).fail(function () {
-
+            }).fail(function (xhr, resp, x, xx) {
+                that.trigger('syncFail', resp);
             }).done(function (resp) {
                 if (sync) {
                     that.trigger('sync', resp, params);

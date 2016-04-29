@@ -5820,7 +5820,8 @@ function log() {
             ['organize', ['duplicate', 'rename', 'rm']],
             ['layout', ['layout']],
             ['view', ['sort']],
-            ['search', ['search']]
+            ['search', ['search']],
+            ['util', ['full']]
             //,
             //['refresh', ['refresh']]
         ],
@@ -5839,16 +5840,21 @@ function log() {
 window.docmana.templates = Object.create(null);
 window.docmana.templates['breadcrumb.html'] = '<% _.forEach(data, function(item, i){ %>\n    <% if(i === data.length - 1){ %>\n    <li class="active">\n        <span>\n            <%- item.name %>\n        </span>\n    </li>\n    <% }else{ %>\n    <li>\n        <a href="#" data-hash="<%- item.hash %>">\n            <%- item.name %>\n        </a>\n    </li>\n    <% } %>\n<% }); %>';
 window.docmana.templates['fileInfo.html'] = '<div class="docmana-file-info">\n    <div class="media center-block">\n        <div class="media-left file-type-large">\n            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %>"></span>\n        </div>\n        <div class="media-body">\n            <h4 class="media-heading">\n                <%- data.name%>\n            </h4>\n            <p>\n            <p>\n                <%- L(\'fileType\') %>:\n                <%- L(\'kind\' + T.mime2Type(data.mime)) %>\n            </p>\n            <p>\n                <%- L(\'fileDateModified\') %>:\n                <%- T.formatDate(data.ts) %>\n            </p>\n            <p>\n                <%- L(\'fileSize\') %>:\n                <%- T.formatFileSize(data.size) %>\n            </p>\n            </p>\n        </div>\n    </div>\n</div>\n';
-window.docmana.templates['main.html'] = '<div class="docmana-heading panel-heading">\n    <div class="docmana-toolbar btn-toolbar"></div>\n</div>\n<div class="docmana-body panel-body no-padding">\n    <div class="docmana-navigation clearfix"></div>\n    <div class="docmana-workzone"></div>\n</div>\n<div class="docmana-footer panel-footer">\n    <div class="docmana-statusbar"></div>\n</div>\n<div class="modal fade" id="modal-file" tabindex="-1" role="dialog">\n    <div class="modal-dialog modal-lg static" role="document">\n        <div class="modal-content docmana-viewer"></div>\n    </div>\n</div>';
+window.docmana.templates['main.html'] = '<div class="docmana-panel">\n    <div class="docmana-heading panel-heading">\n        <div class="docmana-toolbar btn-toolbar"></div>\n    </div>\n    <div class="docmana-body panel-body no-padding">\n        <div class="docmana-navigation clearfix"></div>\n        <div class="docmana-workzone"></div>\n    </div>\n    <div class="docmana-footer panel-footer">\n        <div class="docmana-statusbar clearfix"></div>\n    </div>\n</div>\n\n<div class="modal fade" id="modal-file" tabindex="-1" role="dialog">\n    <div class="modal-dialog modal-lg static" role="document">\n        <div class="modal-content docmana-viewer"></div>\n    </div>\n</div>\n<div class="modal fade" tabindex="-1" role="dialog">\n    <div class="modal-dialog" role="document">\n        <div class="modal-content docmana-uploader"></div>\n    </div>\n</div>';
 window.docmana.templates['navigation.html'] = '<div class="nav-group pull-left"></div>\n<div class="search-group btn-toolbar pull-right"></div>\n<div class="refresh-group pull-right"></div>\n<div class="breadcrumb-group form-control input-sm">\n    <ul class="docmana-breadcrumb breadcrumb no-margin"></ul>\n</div>\n';
-window.docmana.templates['statusbar.html'] = '<span class="text-total">\n    <%- data.count %>\n    <%- L(\'statusbarItems\') %>\n</span>\n<span class="text-selected">\n    <% if(data.selectedCount > 0){ %>\n    <%- L(\'statusbarSelectedItem\', data.selectedCount) %>\n    <%- data.selectedSize %>\n\n    <% } %>\n</span>';
+window.docmana.templates['statusbar.html'] = '<div class="status-text pull-left"></div>\n<div class="pull-right btn-toolbar">\n    <div class="uploader btn-group"></div>\n    <div class="layout btn-group"></div>\n</div>';
+window.docmana.templates['statusbarText.html'] = '<span class="text-total">\n    <%- data.count %>\n    <%- L(\'statusbarItems\') %>\n</span>\n<span class="text-selected">\n    <% if(data.selectedCount > 0){ %>\n    <%- L(\'statusbarSelectedItem\', data.selectedCount) %>\n\n    <span class="size">\n        <%- data.selectedSize %>\n    </span>\n    <% } %>\n</span>';
+window.docmana.templates['toolbar.html'] = '<div class="right pull-right btn-toolbar">\n    \n</div>';
 window.docmana.templates['toolbarBtn.html'] = '<button type="button" class="btn btn-default <%- data.name %>"\n        data-command="<%- data.name %>"\n        title="<%- L(\'cmd\' + _.upperFirst(data.name)) %> <%- data.shortcuts %>">\n    <i class="<%- data.icon %>"></i>\n</button>\n';
 window.docmana.templates['toolbarBtnGroup.html'] = '<div class="btn-group btn-group-sm docmana-group-<%- data.name %>" role="group"></div>';
 window.docmana.templates['toolbarBtnLayout.html'] = '<div class="btn-group btn-group-sm" data-toggle="buttons">\n    <label class="btn btn-default" title="<%- L(\'layoutList\') %>">\n        <input type="radio" name="layout" autocomplete="off" data-layout="list">\n        <i class="docmana-icon docmana-icon-listview"></i>\n    </label>\n    <label class="btn btn-default" title="<%- L(\'layoutLargeIcons\') %>">\n        <input type="radio" name="layout" autocomplete="off" data-layout="icons">\n        <i class="docmana-icon docmana-icon-iconsview"></i>\n    </label>\n</div>\n';
 window.docmana.templates['toolbarBtnSort.html'] = '<div class="btn-group btn-group-sm <%- data.name %>">\n    <button type="button" class="btn btn-default dropdown-toggle"\n            data-toggle="dropdown" aria-haspopup="true"\n            aria-expanded="false"\n             title="<%- L(\'cmdSort\') %>">\n        <i class="<%- data.icon %>"></i>\n        <span class="caret"></span>\n    </button>\n    <ul class="dropdown-menu">\n        <li>\n            <a href="#" data-command="sort" data-field="name">\n                <i class=""></i>\n                <%- L(\'sortByName\') %>\n            </a>\n        </li>\n        <li>\n            <a href="#" data-command="sort" data-field="size">\n                <%- L(\'sortBySize\') %>\n            </a>\n        </li>\n        <li>\n            <a href="#" data-command="sort" data-field="mime">\n                <%- L(\'sortByType\') %>\n            </a>\n        </li>\n        <li>\n            <a href="#" data-command="sort" data-field="ts">\n                <%- L(\'sortByDate\') %>\n            </a>\n        </li>\n        <li role="separator" class="divider"></li>\n        <li>\n            <a href="#" data-command="sort" data-order="asc">\n                <%- L(\'sortAscending\') %>\n            </a>\n        </li>\n        <li>\n            <a href="#" data-command="sort" data-order="desc">\n                <%- L(\'sortDescending\') %>\n            </a>\n        </li>\n    </ul>\n</div>\n';
 window.docmana.templates['toolbarBtnUpload.html'] = '<a class="btn btn-default <%- data.name %>" data-command="<%- data.name %>"\n    title="<%- L(\'cmd\' + _.upperFirst(data.name)) %>">\n    <i class="<%- data.icon %>"></i>\n    <form enctype="multipart/form-data" method="POST">\n        <input type="file" name="upload[]" multiple value="" />\n    </form>\n</a>';
 window.docmana.templates['toolbarSearch.html'] = '<div class="form-inline">\n    <div class="form-group has-feedback">\n        <input type="text" class="form-control input-sm" \n               placeholder="<%- L(\'textSearch\') %>">\n        <span class="form-control-feedback" aria-hidden="true">\n            <i class="fa fa-search"></i>\n        </span>\n    </div>\n</div>';
-window.docmana.templates['viewer.html'] = '<div class="modal-header">\n    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n        <span aria-hidden="true">&times;</span>\n    </button>\n    <h4 class="modal-title">�ļ�</h4>\n</div>\n<div class="modal-body no-padding docmana-viewer-body">\n\n</div>\n<div class="modal-footer clearfix">\n    <button type="button" class="btn btn-default pull-left"\n            title="<%- L(\'textPreviousItem\') %>"\n             data-action="previous">\n        <i class="docmana-icon docmana-icon-back"></i>\n    </button>\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'cmdDownload\') %>"\n            data-action="download">\n        <i class="docmana-icon docmana-icon-download"></i>\n    </button>\n    <button type="button"\n            class="btn btn-default pull-right"\n            data-action="next"\n            title="<%- L(\'textNextItem\') %>">\n        <i class="docmana-icon docmana-icon-forward"></i>\n    </button>\n</div>';
+window.docmana.templates['uploader.html'] = '<div class="modal-header">\n    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n        <span aria-hidden="true">&times;</span>\n    </button>\n    <h4 class="modal-title"><%- L(\'textFileUpload\') %></h4>\n</div>\n<div class="modal-body no-padding">\n    <div class="files list-group"></div>\n</div>\n<div class="modal-footer clearfix">\n    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">\n        <%- L(\'textClose\') %>\n    </button>\n</div>';
+window.docmana.templates['uploaderFiles.html'] = '        <% for (var i=0, file; file= data.files[i]; i++) { %>\n<div class="file-upload file">\n    <span class="list-group-item holder">.</span>\n    <div class="progress">\n        <div class="progress-bar progress-bar-info" style="width: 0"></div>\n    </div>\n    <div class="info list-group-item clearfix">\n        <div class="table-row">\n            <div class="name table-column">\n                <%- file.name %>\n            </div>\n            <div class="size table-column">\n                Processing...\n            </div>\n            <!--<div class="folder pull-left">\n        我的文件\n    </div>-->\n            <div class="status table-column">\n                <!--<i class="fa fa-check-circle text-success"></i>-->\n                <span class="percent"></span>\n                <span class="error"></span>\n            </div>\n            <div class="operator table-column">\n                <% if (!i && !data.options.autoUpload) { %>\n                <button class="btn btn-primary btn-sm start" disabled>\n                    <i class="fa fa-upload"></i>\n                </button>\n                <% } %>\n                <% if (!i) { %>\n                <button class="btn btn-link btn-warning btn-xs cancel">\n                    <i class="fa fa-ban"></i>\n                </button>\n                <% } %>\n            </div>\n        </div>\n    </div>\n</div>\n        <% } %>\n';
+window.docmana.templates['uploaderTrigger.html'] = '<div class="btn-uploader" style="position:relative;"  title="<%- L(\'textFileUpload\') %>">\n    <button class="btn btn-default btn-sm">\n        <i class="fa fa-tasks"></i>\n    </button>\n    <span class="badge badge-notify"></span>\n</div>';
+window.docmana.templates['viewer.html'] = '<div class="modal-header">\n    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n        <span aria-hidden="true">&times;</span>\n    </button>\n    <h4 class="modal-title">�ļ�</h4>\n</div>\n<div class="modal-body no-padding docmana-viewer-body">\n\n</div>\n<div class="modal-footer clearfix">\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'cmdDownload\') %>"\n            data-action="download">\n        <i class="docmana-icon docmana-icon-download"></i>\n    </button>\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'textPreviousItem\') %>"\n            data-action="previous">\n        <i class="docmana-icon docmana-icon-back"></i>\n    </button>\n    <button type="button"\n            class="btn btn-default"\n            data-action="next"\n            title="<%- L(\'textNextItem\') %>">\n        <i class="docmana-icon docmana-icon-forward"></i>\n    </button>\n</div>';
 window.docmana.templates['workzoneIconsView.html'] = '<div class="icons-view docmana-workzone-view clearfix">\n</div>\n';
 window.docmana.templates['workzoneIconsViewItem.html'] = '<div id="<%- data.hash %>"\n     title="<%= T.fileMetadata(data) %>"\n     class="drag-block file-list-item <%- T.mime2Class(data.mime) %>"\n     data-name="<%- data.name %>">\n    <div class="filetype <%- T.name2IconClass(data.name, data.mime)%> drag-block"></div>\n    <div class="filename drag-block" title="<%- data.name %>">\n        <%- data.name %>\n    </div>\n</div>\n';
 window.docmana.templates['workzoneListView.html'] = '<div class="list-view">\n    <div class="datatable-header panel panel-default">\n        <table class="table table-bordered table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <thead>\n                <tr>\n                    <th><%- L(\'fileName\') %></th>\n                    <th><%- L(\'fileDateModified\') %></th>\n                    <th><%- L(\'fileType\') %></th>\n                    <th><%- L(\'fileSize\') %></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class="datatable-content">\n        <table class="table table-hover table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <tbody class="docmana-workzone-view"></tbody>\n        </table>\n    </div>\n</div>\n';
@@ -5893,6 +5899,9 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
         },
         toolbar: function () {
             return this.main().ui.toolbar;
+        },
+        statusbar: function(){
+            return this.main().ui.statusbar;
         },
         workzone: function () {
             return this.main().ui.workzone;
@@ -6250,24 +6259,36 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
         templateName: 'main',
         defaults: {
             autoRender: true,
-            className: 'static panel-default no-margin'
+            className: 'static',
+            panelClassName: 'panel no-margin panel-default'
         },
         listen: function () {
             this.listenTo(this, 'rendered', function () {
                 this.$el.attr('tabindex', 1)
-                    .addClass('docmana panel')
-                    .addClass(this.props.className);
+                    .addClass('docmana')
+                    .addClass(this.props.className)
+                    .find('.docmana-panel')
+                    .addClass(this.props.panelClassName);
                 this._initUI();
                 this.startup();
                 var that = this;
+
                 setTimeout(function () {
                     that.relayout();
                 }, 1);
             });
+            this.listenTo(this, 'started', function () {
+                this.listenTo(this.store, 'syncFail', function (resp) {
+                    docmana.ui.notify.error(resp);
+                });
+            });
+        },
+        $panel: function () {
+            return this.$('.docmana-panel');
         },
         relayout: function () {
-          
-            if (this.$el.hasClass('static')) {
+
+            if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
                 this.$('.docmana-body').css({
                     top: this.$('.docmana-heading').outerHeight(),
                     bottom: this.$('.docmana-footer').outerHeight()
@@ -6298,8 +6319,8 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 }, that.props[name]));
             });
 
-            this.$el.on('focus', function() {
-              //  that.ui.workzone && that.ui.workzone.$el.focus();
+            this.$el.on('focus', function () {
+                //  that.ui.workzone && that.ui.workzone.$el.focus();
             });
         },
         _initCommands: function () {
@@ -6308,15 +6329,15 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
 
                 if (_.isArray(cmds)) {
 
-                    _.forEach(cmds, function(cmd) {
-                        var instance = docmana.commands[cmd]({
+                    _.forEach(cmds, function (cmd) {
+                        var instance = docmana.commands[cmd](_.extend({
                             main: that
-                        });
+                        }, that.props[cmd]));
 
                         that.commands[cmd] = instance;
                     });
                 }
-               
+
             });
         },
         command: function (name) {
@@ -6330,7 +6351,11 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 cmd.exec.apply(cmd, args);
             }
         },
+        focus: function () {
+            this.$el.focus();
+        },
         startup: function () {
+            var a = this.$el[0].outerWidth;
             this.trigger('started');
             this.store.open(null, 1);
         }
@@ -6757,7 +6782,7 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
 
                 this._data = groups['true'].concat(groups['false']);
             } else {
-                this._data = this._baseSortBy();
+                this._data = this._baseSortBy(this._data);
             }
 
             this.trigger('sort', this._sortBy);
@@ -6768,9 +6793,6 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             this.trigger('update', this._data, eventData);
         },
         _baseSortBy: function (list) {
-            if (list == null) {
-                list = this._data;
-            }
             var field = this._sortBy.field;
             var order = this._sortBy.order;
 
@@ -6888,8 +6910,8 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 data: params,
                 //contentType: "application/json; charset=utf-8",
                 dataType: "json"
-            }).fail(function () {
-
+            }).fail(function (xhr, resp, x, xx) {
+                that.trigger('syncFail', resp);
             }).done(function (resp) {
                 if (sync) {
                     that.trigger('sync', resp, params);
@@ -6932,6 +6954,56 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
 
 (function () {
     "use strict";
+
+    var templateHelper = _.extend({
+        formatDate: function (unixTs, format) {
+            var date = new Date(unixTs * 1000);
+            format || (format = 'yyyy/mm/dd HH:MM');
+
+            return date.format(format);
+            //return date.toLocaleDateString(docmana.lang) + ' ' + date.toLocaleTimeString(docmana.lang, {
+            //    hour12: false
+            //});
+        },
+        // deprecate
+        _mime2ClassDep: function (mime) {
+            var prefix = 'ico-';
+
+            mime = mime.split('/');
+
+            return prefix + mime[0] + (mime[0] !== 'image' && mime[1] ? ' ' + prefix + mime[1].replace(/(\.|\+)/g, '-') : '');
+        },
+        name2IconClass: function (name, mime) {
+            if (mime === 'directory') {
+                return 'icon-folder';
+            }
+            var parts = name.split('.');
+            var prefix = 'icon-';
+            return prefix + parts[parts.length - 1];
+        },
+        mime2Class: function (mime) {
+            if (mime === 'directory') {
+                return 'type-directory';
+            }
+            return 'type-file';
+        },
+        mime2Type: function (mime) {
+            return docmana.mimeTypes[mime];
+        },
+        fileMetadata: function (data) {
+            var lang = docmana.resource;
+            var strs = [];
+            strs.push(data.name);
+            strs.push(lang('Type') + ': ' + lang('kind' + this.mime2Type(data.mime)));
+            if (data.mime !== 'directory') {
+                strs.push(lang('Size') + ': ' + this.formatFileSize(data.size));
+            }
+            strs.push(lang('Date modified') + ': ' + this.formatDate(data.ts));
+            return strs.join(' &#13; ');
+        }
+    }, docmana.utils);
+
+    docmana.templateHelper = templateHelper;
 
     docmana.template = {
         _cache: {}
@@ -7189,60 +7261,6 @@ var Plugins;
 
 
 (function () {
-    "use strict";
-
-    docmana.templateHelper = _.extend( {
-        formatDate: function (unixTs, format) {
-            var date = new Date(unixTs * 1000);
-            format || (format = 'yyyy/mm/dd HH:MM');
-
-            return date.format(format);
-            //return date.toLocaleDateString(docmana.lang) + ' ' + date.toLocaleTimeString(docmana.lang, {
-            //    hour12: false
-            //});
-        },
-        // deprecate
-        _mime2ClassDep: function (mime) {
-            var prefix = 'ico-';
-
-            mime = mime.split('/');
-
-            return prefix + mime[0] + (mime[0] !== 'image' && mime[1] ? ' ' + prefix + mime[1].replace(/(\.|\+)/g, '-') : '');
-        },
-        name2IconClass: function (name, mime) {
-            if (mime === 'directory') {
-                return 'icon-folder';
-            }
-            var parts = name.split('.');
-            var prefix = 'icon-';
-            return prefix + parts[parts.length - 1];
-        },
-        mime2Class: function (mime) {
-            if (mime === 'directory') {
-                return 'type-directory';
-            }
-            return 'type-file';
-        },
-        mime2Type: function (mime) {
-            return docmana.mimeTypes[mime];
-        },
-        fileMetadata: function (data) {
-            var lang = docmana.resource;
-            var strs = [];
-            strs.push(data.name);
-            strs.push(lang('Type') + ': ' + lang('kind' + this.mime2Type(data.mime)));
-            if (data.mime !== 'directory') {
-                strs.push(lang('Size') + ': ' + this.formatFileSize(data.size));
-            }
-            strs.push(lang('Date modified') + ': ' + this.formatDate(data.ts));
-            return strs.join(' &#13; ');
-        }
-    }, docmana.utils);
-
-})();
-
-
-(function () {
 
     "use strict";
 
@@ -7434,6 +7452,65 @@ var Plugins;
 
     "use strict";
 
+    var commandName = 'full';
+
+    var Cmd = docmana.CommandBase.extend({
+        init: function (options) {
+            this.name = commandName;
+            this.templateName = 'toolbarBtn';
+            this.enabledWhen = null;
+
+            this.viewLayout = this.props.viewLayout;
+        },
+        defaults: {
+            viewLayout: 'normal' // 'fullscreen'
+        },
+        listen: function () {
+            this.listenTo(this, 'rendered', function() {
+                this._setDisplay();
+            });
+        },
+        _getReverse: function () {
+            var curr = this.viewLayout;
+            return curr === 'normal' ? 'fullscreen' : 'normal';
+        },
+        _setDisplay: function () {
+            var curr = this.viewLayout;
+
+            this.$el.find('.docmana-icon').removeClass('docmana-icon-' + this._getReverse())
+                .addClass('docmana-icon-' + curr);
+
+
+        },
+        toggle: function (vl) {
+            this.viewLayout = this._getReverse();
+            this._setDisplay();
+
+            if (this.viewLayout === 'fullscreen') {
+                this.main().$el.addClass('fixed');
+                $('body').addClass('overflow-hidden');
+            } else {
+                this.main().$el.removeClass('fixed');
+                $('body').removeClass('overflow-hidden');
+            }
+
+        },
+        exec: function (options) {
+            this.toggle();
+        }
+    });
+
+    docmana.commands[commandName] = function (options) {
+        return new Cmd(options);
+    }
+
+})();
+
+
+(function () {
+
+    "use strict";
+
     var commandName = 'layout';
 
     var Cmd = docmana.CommandBase.extend({
@@ -7478,7 +7555,7 @@ var Plugins;
         init: function (options) {
             this.name = commandName;
             this.templateName = 'toolbarBtn';
-
+            this.shortcuts = 'Alt+N';
             this.exec = _.debounce(_.bind(this.exec, this), 500);
         },
         _generateName: function () {
@@ -7495,29 +7572,25 @@ var Plugins;
             }
             return name;
         },
-        exec: function () {
+        shortcutExec: function () {
+            if (this.canExec()) {
+                this._exec();
+            }
+        },
+        _exec: function () {
             var that = this;
-            var target = this.store().cwd().hash;
-            //this.store()._data.unshift({
-            //    isNew: true,
-            //    phash: target,
-            //    name: this._generateUsableName(),
-            //    ts: docmana.utils.unixTimestamp(),
-            //    size: 0,
-            //    mime: 'directory'
-            //});
+            var cwd = this.store().cwd();
+            if (!cwd) return;
+
+            var target = cwd.hash;
             var name = this._generateUsableName();
             that.store().mkdir(name, target).done(function () {
                 that.workzone().select(that.workzone().$items().first());
                 that.main().exec('rename');
             });
-
-
-           // this.store().update();
-            //that.workzone().select(this.workzone().$items().first());
-            //that.workzone().editItemName(function (name) {
-            //    that.store().mkdir(name, target);
-            //}, true);
+        },
+        exec: function () {
+            this._exec();
         }
     });
 
@@ -7665,7 +7738,9 @@ var Plugins;
             var that = this;
             this.workzone().editItemName(function (name) {
                 var id = that.workzone().getIds()[0];
-                that.store().rename(name, id);
+                that.store().rename(name, id).done(function () {
+                    that.main().focus();
+                });
             });
         }
     });
@@ -7693,9 +7768,13 @@ var Plugins;
         exec: function () {
             var ids = this.workzone().getIds();
             if (ids.length > 0) {
-                // TODO: 删除时确认提示
-                this.store().rm(ids);
+                var that = this;
+                docmana.ui.notify.confirm(function () {
+                    that.store().rm(ids);
+                });
             }
+           
+           
         }
     });
 
@@ -7807,14 +7886,14 @@ var Plugins;
                 var that = this;
                 var $file = this.$el.find(':file');
                 var uploader = this.main().ui.uploader;
-                // ����� jquery file upload �ؼ������ʼ�� uploader ����
-                if ($.fileupload && uploader) {
+                // 如果有 jquery file upload 控件，则初始化 uploader 容器
+                if ($.fn.fileupload && uploader) {
                     uploader.build($file);
                 } else {
                     $file.on('change', function () {
                         var val = $(this).val();
                         if (val === "" || val == null) return;
-                        // ͨ�� jquery.form �ύ
+                        // 通过 jquery.form 提交
                         that.store().upload($(this).closest('form'));
                     });
                 }
@@ -7978,72 +8057,102 @@ var Plugins;
 
     docmana.ui.notify = notify;
 
-    if (window.noty == null) return;
+    if (!window.console) return;
 
-    notify._core = function (option) {
-        var n = noty($.extend({
-            type: 'warning',
-            dismissQueue: true,
-            force: true,
-            layout: 'topCenter',
-            theme: 'relax',  // bootstrapTheme
-            closeWith: ['click'],
-            maxVisible: 1,
-            animation: {
-                open: { height: 'toggle' },
-                close: { height: 'toggle' },
-                easing: 'swing',
-                speed: 100 // opening & closing animation speed
-            },
-            timeout: false,
-            killer: true,
-            modal: false
-        }, option));
+    if (window.noty == null) {
+        notify._core = function (option) {
+            console[option.type](option.text);
+        }
+        notify.warn = function (text) {
+            console['warn'](text);
+        }
+        notify.success = function (text) {
+            console['log'](text);
+        }
+        notify.error = function (text) {
+            console['error'](text);
+        }
+        notify.confirm = function (sb, cb, text) {
+            text || (text = docmana.resource('textConfirmOperate'));
 
-    };
+            var r = window.confirm(text);
+            if (r) {
+                sb();
+            } else {
+                cb();
+            }
+        }
+    } else {
 
-    notify.warn = function (text) {
-        notify._core({
-            text: text,
-            type: 'warning',
-            timeout: 4000
-        });
-    };
+        notify._core = function (option) {
+            var n = noty($.extend({
+                type: 'warning',
+                dismissQueue: true,
+                force: true,
+                layout: 'topCenter',
+                theme: 'relax',  // bootstrapTheme
+                closeWith: ['click'],
+                maxVisible: 1,
+                animation: {
+                    open: { height: 'toggle' },
+                    close: { height: 'toggle' },
+                    easing: 'swing',
+                    speed: 100 // opening & closing animation speed
+                },
+                timeout: false,
+                killer: true,
+                modal: false
+            }, option));
 
-    notify.success = function (text) {
-        notify._core({
-            text: text,
-            timeout: 2000,
-            type: 'success'
-        });
-    };
+        };
 
-    notify.error = function (text) {
-        notify._core({
-            text: text,
-            type: 'error',
-            timeout: false
-        });
-    };
+        notify.warn = function (text) {
+            notify._core({
+                text: text,
+                type: 'warning',
+                timeout: 4000
+            });
+        };
 
-    notify.confirm = function (successCb, cancelCb) {
-        notify._core({
-            text: '确定进行这个操作？',
-            type: 'confirm',
-            modal: true,
-            buttons: [{
-                addClass: 'btn btn-primary btn-xs', text: '确定', onClick: function ($noty) {
-                    $noty.close();
-                    successCb();
-                }
-            }, {
-                addClass: 'btn btn-danger btn-xs', text: '取消', onClick: function ($noty) {
-                    $noty.close();
-                    cancelCb();
-                }
-            }]
-        });
-    };
+        notify.success = function (text) {
+            notify._core({
+                text: text,
+                timeout: 2000,
+                type: 'success'
+            });
+        };
+
+        notify.error = function (text) {
+            notify._core({
+                text: text,
+                type: 'error',
+                timeout: false
+            });
+        };
+
+        notify.confirm = function (successCb, cancelCb, text) {
+            text || (text = docmana.resource('textConfirmOperate'));
+
+            notify._core({
+                text: text,
+                type: 'confirm',
+                modal: true,
+                buttons: [{
+                    addClass: 'btn btn-primary btn-xs', text: docmana.resource('textOk'), onClick: function ($noty) {
+                        $noty.close();
+                        successCb();
+                    }
+                }, {
+                    addClass: 'btn btn-danger btn-xs', text: docmana.resource('textCancel'), onClick: function ($noty) {
+                        $noty.close();
+                        cancelCb();
+                    }
+                }]
+            });
+        };
+
+    }
+
 
 
 })();
@@ -8058,20 +8167,27 @@ var Plugins;
     var Statusbar = docmana.CommandContainer.extend({
         templateName: 'statusbar',
         defaults: {
-            commands: ['layout']
+            autoRender: true,
+            commands: [{
+                name: 'layout',
+                to: '.layout'
+            }]
         },
         listen: function () {
             this.listenTo(this.store(), 'update', function () {
-                this.render();
+                this.updateStatus();
             });
             this.listenTo(this.workzone(), 'selected', function () {
-                this.render();
+                this.updateStatus();
             });
             this.listenTo(this, 'rendered', function () {
                 this._renderCommands();
             });
         },
-        getState: function () {
+        updateStatus: function () {
+            this.$('.status-text').html(this.tpl('statusbarText')(this.getStatus()));
+        },
+        getStatus: function () {
             var data = this.store().cwdData();
             var selectedIds = this.workzone().getIds();
             var selectedSize = _.reduce(_.map(this.store().byIds(selectedIds), function (item) {
@@ -8130,13 +8246,22 @@ var Plugins;
 
     var Toolbar = docmana.CommandContainer.extend({
         className: 'docmana-toolbar',
+        templateName: 'toolbar',
         defaults: {
             autoRender: true,
             autoAction: true,
-            commands: ['new', 'open', 'clipboard', 'organize', 'view']
+            commands: ['new', 'open', 'clipboard', 'organize', {
+                name: 'view',
+                to: '.right'
+            }, {
+                name: 'util',
+                to: '.right'
+            }]
         },
-        render: function () {
-            this._renderCommands();
+        listen: function () {
+            this.listenTo(this, 'rendered', function () {
+                this._renderCommands();
+            });
         }
     });
 
@@ -8152,56 +8277,115 @@ var Plugins;
     // 当前工作目录界面
 
     var Uploader = docmana.ViewBase.extend({
-        init: function() {
+        templateName: 'uploader',
+        init: function () {
+            var that = this;
+            this.parentDialog().on('shown.bs.modal', function () {
+
+            }).on('hidden.bs.modal', function () {
+                // that.$body().html('');
+                that.main().$el.focus();  // 重设焦点
+            });
+        },
+        defaults: {
+            autoRender: true
         },
         events: {
             'click .cancel': '_cancelHandler'
         },
         listen: function () {
-            this.listenTo(this.main(), 'start', function() {
+            this.listenTo(this.main(), 'started', function () {
                 // 设置触发器
+                var that = this;
+                var statusbar = this.statusbar();
+                var $btn = $(this.tpl('uploaderTrigger')());
+                if (statusbar) {
+                    $btn.on('click', function () {
+                        that.parentDialog().modal('show');
+                    }).appendTo(statusbar.$('.uploader'));
+                    that.$trigger = $btn;
+                }
+            });
+            this.listenTo(this, 'rendered', function () {
+                this.parentDialog().modal({
+                    show: false
+                });
             });
         },
-        inputInstance: function() {
-            return this.$input.data('blueimp-fileupload') || this.$input.data('fileupload');
+        parentDialog: function () {
+            return this.$element().closest('.modal');
         },
-        $filesContainer: function() {
+        inputInstance: function ($input) {
+            $input = $input || this.$input;
+            return $input.data('blueimp-fileupload') || $input.data('fileupload');
+        },
+        $body: function () {
             return this.$('.files');
+        },
+        updateBadge: function () {
+            var count = this.count();
+            var $badge = this.$trigger.find('.badge');
+            $badge.text(count);
+            if (count === 0) {
+                $badge.hide();
+            } else {
+                $badge.show();
+            }
+        },
+        count: function(){
+            var count = this.$('.file').length;
+            return count;
+        },
+        updateDialogDisplay: function(){
+            if (this.count() === 0) {
+                this.parentDialog().modal('hide');
+            } else {
+                this.parentDialog().modal('show');
+            }
         },
         build: function ($fileInput) {
             var that = this;
             var tplFile = this.tpl('uploaderFiles');
             var formatFileSize = docmana.utils.formatFileSize;
 
-            this.$input = $fileInput;
-
-            this.$input.fileupload({
+            $fileInput.fileupload({
                 url: this.store().url(),
-                formData: this.store().uploadParams(),
+                formData: function () {
+                    return _.map(that.store().uploadParams(), function (value, key) {
+                        return {
+                            name: key,
+                            value: value
+                        }
+                    });
+                },
                 dataType: 'json',
-                add: function(e, data) {
+                add: function (e, data) {
                     if (e.isDefaultPrevented()) {
                         return false;
                     }
+
                     var $this = $(this);
-                    var instance = that.inputInstance();
-                    var options = that.options;
+                    var instance = that.inputInstance($this);
+                    var options = instance.options;
 
                     data.context = $(tplFile({
                         files: data.files,
                         options: options
                     })).data('data', data).addClass('processing');
 
-                    that.$filesContainer().append(data.context);
+                    that.$body().append(data.context);
 
-                    data.process().always(function() {
-                        data.context.each(function(index) {
+                    that.updateBadge();
+                    that.updateDialogDisplay();
+
+                    data.process().always(function () {
+                        data.context.each(function (index) {
                             $(this).find('.size').text(
                                 formatFileSize(data.files[index].size)
                             );
                         }).removeClass('processing');
                         // that._renderPreviews(data);
-                    }).done(function() {
+                    }).done(function () {
                         data.context.find('.start').prop('disabled', false);
 
                         if ((instance._trigger('added', e, data) !== false) &&
@@ -8209,9 +8393,9 @@ var Plugins;
                             data.autoUpload !== false) {
                             data.submit();
                         }
-                    }).fail(function() {
+                    }).fail(function () {
                         if (data.files.error) {
-                            data.context.each(function(index) {
+                            data.context.each(function (index) {
                                 var error = data.files[index].error;
                                 if (error) {
                                     $(this).find('.status').text(error);
@@ -8220,36 +8404,56 @@ var Plugins;
                         }
                     });
                 },
-                progressall: function(e, data) {
-                    //var progress = parseInt(data.loaded / data.total * 100, 10);
-                    //$('#progress .bar').css(
-                    //    'width',
-                    //    progress + '%'
-                    //);
-                },
-                progress: function(e, data) {
+                progress: function (e, data) {
                     if (e.isDefaultPrevented()) {
                         return false;
                     }
                     var progress = Math.floor(data.loaded / data.total * 100);
                     if (data.context) {
-                        data.context.each(function() {
+                        data.context.each(function () {
                             $(this).find('.progress')
                                 .attr('aria-valuenow', progress)
                                 .children().first().css(
                                     'width',
                                     progress + '%'
                                 );
+                            $(this).find('.status > .percent').text(progress + '%');
                         });
                     }
                 },
-                done: function(e, data) {
-                    debugger;
-                    $.each(data.result.added, function(index, file) {
-                        $('<p/>').text(file.name).appendTo(document.body);
-                    });
+                fail: function (e, data) {
+                    if (e.isDefaultPrevented()) {
+                        return false;
+                    }
+                    var instance = that.inputInstance($(this));
+                    if (data.context) {
+                        data.context.each(function (index) {
+                            if (data.errorThrown !== 'abort') {
+                                var file = data.files[index];
+                                file.error = file.error || data.errorThrown;
+                                $(this).find('.folder').text(file.error);
+                            } else {
+                                $(this).remove();
+                                instance._trigger('failed', e, data);
+                                instance._trigger('finished', e, data);
+                            }
+                        });
+                    }
+
+                    that.updateBadge();
+                    that.updateDialogDisplay();
+
+                },
+                done: function (e, data) {
+                    data.context.remove();
+                    that.updateBadge();
+                    that.updateDialogDisplay();
+                    that.store().trigger('sync', data.result);
                 }
             });
+
+            // TODO: 为什么在 fileupload add 方法内获取 that.$input 不正确
+            this.$input = $fileInput;
         },
         _cancelHandler: function (e) {
             e.preventDefault();
@@ -8852,6 +9056,12 @@ var Plugins;
         'textSearch': 'Search...',
         'textPreviousItem': 'previous item',
         'textNextItem': 'next item',
+        'textFileUpload': 'File uploader',
+        'textClose': 'Close',
+        'textOk': 'Ok',
+        'textCancel': 'Cancel',
+        'textConfirmOperate': 'Are you sure you want to do this operation?',
+
         'labelLanguage': 'Language: ',
         'labelTheme': 'Theme: ',
 
@@ -8974,6 +9184,12 @@ var Plugins;
         'textSearch': '搜索...',
         'textPreviousItem': '前一项',
         'textNextItem': '后一项',
+        'textFileUpload': '文件上传器',
+        'textClose': '关闭',
+        'textOk': '确定',
+        'textCancel': '取消',
+        'textConfirmOperate': '确定做此操作？',
+
         'labelLanguage': '语言：',
         'labelTheme': '主题：',
 

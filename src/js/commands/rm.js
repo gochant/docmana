@@ -14,9 +14,13 @@
         exec: function () {
             var ids = this.workzone().getIds();
             if (ids.length > 0) {
-                // TODO: 删除时确认提示
-                this.store().rm(ids);
+                var that = this;
+                docmana.ui.notify.confirm(function () {
+                    that.store().rm(ids);
+                });
             }
+           
+           
         }
     });
 

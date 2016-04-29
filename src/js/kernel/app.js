@@ -13,24 +13,36 @@
         templateName: 'main',
         defaults: {
             autoRender: true,
-            className: 'static panel-default no-margin'
+            className: 'static',
+            panelClassName: 'panel no-margin panel-default'
         },
         listen: function () {
             this.listenTo(this, 'rendered', function () {
                 this.$el.attr('tabindex', 1)
-                    .addClass('docmana panel')
-                    .addClass(this.props.className);
+                    .addClass('docmana')
+                    .addClass(this.props.className)
+                    .find('.docmana-panel')
+                    .addClass(this.props.panelClassName);
                 this._initUI();
                 this.startup();
                 var that = this;
+
                 setTimeout(function () {
                     that.relayout();
                 }, 1);
             });
+            this.listenTo(this, 'started', function () {
+                this.listenTo(this.store, 'syncFail', function (resp) {
+                    docmana.ui.notify.error(resp);
+                });
+            });
+        },
+        $panel: function () {
+            return this.$('.docmana-panel');
         },
         relayout: function () {
 
-            if (this.$el.hasClass('static')) {
+            if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
                 this.$('.docmana-body').css({
                     top: this.$('.docmana-heading').outerHeight(),
                     bottom: this.$('.docmana-footer').outerHeight()
@@ -72,9 +84,9 @@
                 if (_.isArray(cmds)) {
 
                     _.forEach(cmds, function (cmd) {
-                        var instance = docmana.commands[cmd]({
+                        var instance = docmana.commands[cmd](_.extend({
                             main: that
-                        });
+                        }, that.props[cmd]));
 
                         that.commands[cmd] = instance;
                     });
@@ -92,6 +104,9 @@
             if (cmd) {
                 cmd.exec.apply(cmd, args);
             }
+        },
+        focus: function () {
+            this.$el.focus();
         },
         startup: function () {
             var a = this.$el[0].outerWidth;

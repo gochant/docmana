@@ -149,24 +149,26 @@
                     }
                 },
                 fail: function (e, data) {
-                    //if (e.isDefaultPrevented()) {
-                    //    return false;
-                    //}
-                    //var instance = that.inputInstance($(this));
-                    //if (data.context) {
-                    //    data.context.each(function (index) {
-                    //        if (data.errorThrown !== 'abort') {
-                    //            var file = data.files[index];
-                    //            file.error = file.error || data.errorThrown;
-                    //            $(this).find('.folder').text(file.error);
-                    //        } else {
-                    //            $(this).remove();
-                    //            instance._trigger('failed', e, data);
-                    //            instance._trigger('finished', e, data);
-                    //        }
-                    //    });
-                    //}
-                    //that.updateDialogDisplay();
+                    if (e.isDefaultPrevented()) {
+                        return false;
+                    }
+                    var instance = that.inputInstance($(this));
+                    if (data.context) {
+                        data.context.each(function (index) {
+                            if (data.errorThrown !== 'abort') {
+                                var file = data.files[index];
+                                file.error = file.error || data.errorThrown;
+                                $(this).find('.folder').text(file.error);
+                            } else {
+                                $(this).remove();
+                                instance._trigger('failed', e, data);
+                                instance._trigger('finished', e, data);
+                            }
+                        });
+                    }
+
+                    that.updateBadge();
+                    that.updateDialogDisplay();
 
                 },
                 done: function (e, data) {

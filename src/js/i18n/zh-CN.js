@@ -34,8 +34,11 @@
         'textSearch': '搜索...',
         'textPreviousItem': '前一项',
         'textNextItem': '后一项',
-        'textFileUpload': '文件上传',
+        'textFileUpload': '文件上传器',
         'textClose': '关闭',
+        'textOk': '确定',
+        'textCancel': '取消',
+        'textConfirmOperate': '确定做此操作？',
 
         'labelLanguage': '语言：',
         'labelTheme': '主题：',

@@ -5,31 +5,33 @@
         <div class="progress-bar progress-bar-info" style="width: 0"></div>
     </div>
     <div class="info list-group-item clearfix">
-        <div class="name pull-left">
-            <%- file.name %>
-        </div>
-        <div class="size pull-left">
-            Processing...
-        </div>
-        <!--<div class="folder pull-left">
-            我的文件
-        </div>-->
-        <div class="status pull-left">
-            <!--<i class="fa fa-check-circle text-success"></i>-->
-            <span class="percent"></span>
-            <span class="error"></span>
-        </div>
-        <div class="operator pull-left">
-            <% if (!i && !data.options.autoUpload) { %>
-            <button class="btn btn-primary btn-sm start" disabled>
-                <i class="fa fa-upload"></i>
-            </button>
-            <% } %>
-            <% if (!i) { %>
-            <button class="btn btn-warning btn-xs cancel">
-                <i class="fa fa-ban"></i>
-            </button>
-            <% } %>
+        <div class="table-row">
+            <div class="name table-column">
+                <%- file.name %>
+            </div>
+            <div class="size table-column">
+                Processing...
+            </div>
+            <!--<div class="folder pull-left">
+        我的文件
+    </div>-->
+            <div class="status table-column">
+                <!--<i class="fa fa-check-circle text-success"></i>-->
+                <span class="percent"></span>
+                <span class="error"></span>
+            </div>
+            <div class="operator table-column">
+                <% if (!i && !data.options.autoUpload) { %>
+                <button class="btn btn-primary btn-sm start" disabled>
+                    <i class="fa fa-upload"></i>
+                </button>
+                <% } %>
+                <% if (!i) { %>
+                <button class="btn btn-link btn-warning btn-xs cancel">
+                    <i class="fa fa-ban"></i>
+                </button>
+                <% } %>
+            </div>
         </div>
     </div>
 </div>

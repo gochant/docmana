@@ -36,6 +36,9 @@
         'textNextItem': 'next item',
         'textFileUpload': 'File uploader',
         'textClose': 'Close',
+        'textOk': 'Ok',
+        'textCancel': 'Cancel',
+        'textConfirmOperate': 'Are you sure you want to do this operation?',
 
         'labelLanguage': 'Language: ',
         'labelTheme': 'Theme: ',

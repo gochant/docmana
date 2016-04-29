@@ -15,7 +15,9 @@
             var that = this;
             this.workzone().editItemName(function (name) {
                 var id = that.workzone().getIds()[0];
-                that.store().rename(name, id);
+                that.store().rename(name, id).done(function () {
+                    that.main().focus();
+                });
             });
         }
     });

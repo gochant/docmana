@@ -13,6 +13,10 @@
             border-radius: 0;
         }
 
+        .info {
+            display: table;
+        }
+
         .progress-bar {
             opacity: .3;
         }
@@ -26,23 +30,22 @@
             background-color: transparent;
 
             .name {
-                width: 60%;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
 
-            .size,
-            .status {
-                width: 13%;
+            .size {
+                width: 100px;
             }
 
-            /*.folder {
-                width: 24%;
-            }*/
+            .status {
+                width: 50px;
+            }
 
             .operator {
                 width: 50px;
+                text-align: right;
             }
         }
     }

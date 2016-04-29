@@ -23,7 +23,8 @@
             ['organize', ['duplicate', 'rename', 'rm']],
             ['layout', ['layout']],
             ['view', ['sort']],
-            ['search', ['search']]
+            ['search', ['search']],
+            ['util', ['full']]
             //,
             //['refresh', ['refresh']]
         ],

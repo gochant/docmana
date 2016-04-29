@@ -15,72 +15,102 @@
 
     docmana.ui.notify = notify;
 
-    if (window.noty == null) return;
+    if (!window.console) return;
 
-    notify._core = function (option) {
-        var n = noty($.extend({
-            type: 'warning',
-            dismissQueue: true,
-            force: true,
-            layout: 'topCenter',
-            theme: 'relax',  // bootstrapTheme
-            closeWith: ['click'],
-            maxVisible: 1,
-            animation: {
-                open: { height: 'toggle' },
-                close: { height: 'toggle' },
-                easing: 'swing',
-                speed: 100 // opening & closing animation speed
-            },
-            timeout: false,
-            killer: true,
-            modal: false
-        }, option));
+    if (window.noty == null) {
+        notify._core = function (option) {
+            console[option.type](option.text);
+        }
+        notify.warn = function (text) {
+            console['warn'](text);
+        }
+        notify.success = function (text) {
+            console['log'](text);
+        }
+        notify.error = function (text) {
+            console['error'](text);
+        }
+        notify.confirm = function (sb, cb, text) {
+            text || (text = docmana.resource('textConfirmOperate'));
 
-    };
+            var r = window.confirm(text);
+            if (r) {
+                sb();
+            } else {
+                cb();
+            }
+        }
+    } else {
 
-    notify.warn = function (text) {
-        notify._core({
-            text: text,
-            type: 'warning',
-            timeout: 4000
-        });
-    };
+        notify._core = function (option) {
+            var n = noty($.extend({
+                type: 'warning',
+                dismissQueue: true,
+                force: true,
+                layout: 'topCenter',
+                theme: 'relax',  // bootstrapTheme
+                closeWith: ['click'],
+                maxVisible: 1,
+                animation: {
+                    open: { height: 'toggle' },
+                    close: { height: 'toggle' },
+                    easing: 'swing',
+                    speed: 100 // opening & closing animation speed
+                },
+                timeout: false,
+                killer: true,
+                modal: false
+            }, option));
 
-    notify.success = function (text) {
-        notify._core({
-            text: text,
-            timeout: 2000,
-            type: 'success'
-        });
-    };
+        };
 
-    notify.error = function (text) {
-        notify._core({
-            text: text,
-            type: 'error',
-            timeout: false
-        });
-    };
+        notify.warn = function (text) {
+            notify._core({
+                text: text,
+                type: 'warning',
+                timeout: 4000
+            });
+        };
 
-    notify.confirm = function (successCb, cancelCb) {
-        notify._core({
-            text: '确定进行这个操作？',
-            type: 'confirm',
-            modal: true,
-            buttons: [{
-                addClass: 'btn btn-primary btn-xs', text: '确定', onClick: function ($noty) {
-                    $noty.close();
-                    successCb();
-                }
-            }, {
-                addClass: 'btn btn-danger btn-xs', text: '取消', onClick: function ($noty) {
-                    $noty.close();
-                    cancelCb();
-                }
-            }]
-        });
-    };
+        notify.success = function (text) {
+            notify._core({
+                text: text,
+                timeout: 2000,
+                type: 'success'
+            });
+        };
+
+        notify.error = function (text) {
+            notify._core({
+                text: text,
+                type: 'error',
+                timeout: false
+            });
+        };
+
+        notify.confirm = function (successCb, cancelCb, text) {
+            text || (text = docmana.resource('textConfirmOperate'));
+
+            notify._core({
+                text: text,
+                type: 'confirm',
+                modal: true,
+                buttons: [{
+                    addClass: 'btn btn-primary btn-xs', text: docmana.resource('textOk'), onClick: function ($noty) {
+                        $noty.close();
+                        successCb();
+                    }
+                }, {
+                    addClass: 'btn btn-danger btn-xs', text: docmana.resource('textCancel'), onClick: function ($noty) {
+                        $noty.close();
+                        cancelCb();
+                    }
+                }]
+            });
+        };
+
+    }
+
 
 
 })();

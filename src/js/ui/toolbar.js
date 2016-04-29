@@ -5,13 +5,22 @@
 
     var Toolbar = docmana.CommandContainer.extend({
         className: 'docmana-toolbar',
+        templateName: 'toolbar',
         defaults: {
             autoRender: true,
             autoAction: true,
-            commands: ['new', 'open', 'clipboard', 'organize', 'view']
+            commands: ['new', 'open', 'clipboard', 'organize', {
+                name: 'view',
+                to: '.right'
+            }, {
+                name: 'util',
+                to: '.right'
+            }]
         },
-        render: function () {
-            this._renderCommands();
+        listen: function () {
+            this.listenTo(this, 'rendered', function () {
+                this._renderCommands();
+            });
         }
     });
 

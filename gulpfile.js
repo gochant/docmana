@@ -24,7 +24,6 @@ var paths = {
         'src/js/kernel/store.js',
         'src/js/kernel/template.js',
         'src/js/kernel/plugins.js',
-        'src/js/kernel/templateHelper.js',
         'src/js/commands/**/*.js',
         'src/js/ui/**/*.js',
         'src/js/i18n/**/*.js'
