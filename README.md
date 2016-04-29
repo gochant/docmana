@@ -30,7 +30,7 @@ docmana 是一个 js 库，用于创建可扩展的web端的文件管理器
 
 ### 1. 引入 JS/CSS
 
-```html
+```
 <!-- css -->
 <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
 <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -48,13 +48,13 @@ docmana 是一个 js 库，用于创建可扩展的web端的文件管理器
 
 默认配置下，docmana 主界面采用绝对定位布局以撑满整个父级元素，因此父级元素应该设置一个高度
 
-```html
+```
 <div id="docmana"></div>
 ```
 
 ### 3. 调用
 
-```js
+```
 $(function () {
     $('#docmana').docmana({
         store: {
@@ -71,7 +71,7 @@ $(function () {
 
 ### 获取选中文件
 
-```js
+```
 var instance = $('#docmana').data('docmana');
 instance.workzone().on('selected', function (selected) {
     var data = instance.store().byIds(instance.workzone().getIds());
@@ -83,7 +83,7 @@ instance.workzone().on('selected', function (selected) {
 
 使用 [gulp](https://github.com/gulpjs/gulp)，nodejs 环境（4.x）
 
-```cmd
+```
 gulp
 
 gulp scripts
