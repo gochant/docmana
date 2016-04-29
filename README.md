@@ -7,7 +7,7 @@ docmana 是一个 js 库，用于创建可扩展的web端的文件管理器
 * UI 简单直接，布局仿 Windows File Explorer，支持快捷键
 * 样式基于 Bootstrap，也可重写所有模板基于其他样式库
 * 模块化，预留扩展点，定制或扩展方便
-* 与后端主要交互接口兼容 elFinder，服务器端可重用现有的 elFinder Connector（需稍作更改）
+* 与后端主要交互接口兼容 [elFinder](https://github.com/Studio-42/elFinder)，服务器端可重用现有的 elFinder Connector（需稍作更改）
 
 ## 当前版本特性
 
