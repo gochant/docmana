@@ -10,17 +10,17 @@
         </span>
 
     </td>
-    <td class="metadata date">
+    <td class="metadata date text-muted">
         <span class="drag-block">
             <%- T.formatDate(data.ts) %>
         </span>
     </td>
-    <td class="metadata type">
+    <td class="metadata type text-muted">
         <span class="drag-block">
             <%- L('kind' + T.mime2Type(data.mime)) %>
         </span>
     </td>
-    <td class="metadata size">
+    <td class="metadata size text-muted">
         <span class="drag-block">
             <%- data.mime === 'directory' ? '' : T.formatFileSize(data.size, true) %>
         </span>

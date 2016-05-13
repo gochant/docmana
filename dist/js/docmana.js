@@ -1,4 +1,4 @@
-/*
+(function () {/*
  * Date Format 1.2.3
  * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
  * MIT license
@@ -5841,8 +5841,8 @@ window.docmana.templates = Object.create(null);
 window.docmana.templates['breadcrumb.html'] = '<% _.forEach(data, function(item, i){ %>\n    <% if(i === data.length - 1){ %>\n    <li class="active">\n        <span>\n            <%- item.name %>\n        </span>\n    </li>\n    <% }else{ %>\n    <li>\n        <a href="#" data-hash="<%- item.hash %>">\n            <%- item.name %>\n        </a>\n    </li>\n    <% } %>\n<% }); %>';
 window.docmana.templates['fileInfo.html'] = '<div class="docmana-file-info">\n    <div class="media center-block">\n        <div class="media-left file-type-large">\n            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %>"></span>\n        </div>\n        <div class="media-body">\n            <h4 class="media-heading">\n                <%- data.name%>\n            </h4>\n            <p>\n            <p>\n                <%- L(\'fileType\') %>:\n                <%- L(\'kind\' + T.mime2Type(data.mime)) %>\n            </p>\n            <p>\n                <%- L(\'fileDateModified\') %>:\n                <%- T.formatDate(data.ts) %>\n            </p>\n            <p>\n                <%- L(\'fileSize\') %>:\n                <%- T.formatFileSize(data.size) %>\n            </p>\n            </p>\n        </div>\n    </div>\n</div>\n';
 window.docmana.templates['main.html'] = '<div class="docmana-panel">\n    <div class="docmana-heading panel-heading">\n        <div class="docmana-toolbar btn-toolbar"></div>\n    </div>\n    <div class="docmana-body panel-body no-padding">\n        <div class="docmana-navigation clearfix"></div>\n        <div class="docmana-workzone"></div>\n    </div>\n    <div class="docmana-footer panel-footer">\n        <div class="docmana-statusbar clearfix"></div>\n    </div>\n</div>\n\n<div class="modal fade" id="modal-file" tabindex="-1" role="dialog">\n    <div class="modal-dialog modal-lg static" role="document">\n        <div class="modal-content docmana-viewer"></div>\n    </div>\n</div>\n<div class="modal fade" tabindex="-1" role="dialog">\n    <div class="modal-dialog" role="document">\n        <div class="modal-content docmana-uploader"></div>\n    </div>\n</div>';
-window.docmana.templates['navigation.html'] = '<div class="nav-group pull-left"></div>\n<div class="search-group btn-toolbar pull-right"></div>\n<div class="refresh-group pull-right"></div>\n<div class="breadcrumb-group form-control input-sm">\n    <ul class="docmana-breadcrumb breadcrumb no-margin"></ul>\n</div>\n';
-window.docmana.templates['statusbar.html'] = '<div class="status-text pull-left"></div>\n<div class="pull-right btn-toolbar">\n    <div class="uploader btn-group"></div>\n    <div class="layout btn-group"></div>\n</div>';
+window.docmana.templates['navigation.html'] = '<div class="nav-group"></div>\n<div class="breadcrumb-group form-control input-sm">\n    <ul class="docmana-breadcrumb breadcrumb no-margin"></ul>\n</div>\n<div class="search-group btn-toolbar"></div>\n<div class="refresh-group"></div>\n\n';
+window.docmana.templates['statusbar.html'] = '<div class="status-text pull-left btn-sm"></div>\n<div class="pull-right btn-toolbar">\n    <div class="uploader btn-group"></div>\n    <div class="layout btn-group"></div>\n</div>';
 window.docmana.templates['statusbarText.html'] = '<span class="text-total">\n    <%- data.count %>\n    <%- L(\'statusbarItems\') %>\n</span>\n<span class="text-selected">\n    <% if(data.selectedCount > 0){ %>\n    <%- L(\'statusbarSelectedItem\', data.selectedCount) %>\n\n    <span class="size">\n        <%- data.selectedSize %>\n    </span>\n    <% } %>\n</span>';
 window.docmana.templates['toolbar.html'] = '<div class="right pull-right btn-toolbar">\n    \n</div>';
 window.docmana.templates['toolbarBtn.html'] = '<button type="button" class="btn btn-default <%- data.name %>"\n        data-command="<%- data.name %>"\n        title="<%- L(\'cmd\' + _.upperFirst(data.name)) %> <%- data.shortcuts %>">\n    <i class="<%- data.icon %>"></i>\n</button>\n';
@@ -5853,12 +5853,12 @@ window.docmana.templates['toolbarBtnUpload.html'] = '<a class="btn btn-default <
 window.docmana.templates['toolbarSearch.html'] = '<div class="form-inline">\n    <div class="form-group has-feedback">\n        <input type="text" class="form-control input-sm" \n               placeholder="<%- L(\'textSearch\') %>">\n        <span class="form-control-feedback" aria-hidden="true">\n            <i class="fa fa-search"></i>\n        </span>\n    </div>\n</div>';
 window.docmana.templates['uploader.html'] = '<div class="modal-header">\n    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n        <span aria-hidden="true">&times;</span>\n    </button>\n    <h4 class="modal-title"><%- L(\'textFileUpload\') %></h4>\n</div>\n<div class="modal-body no-padding">\n    <div class="files list-group"></div>\n</div>\n<div class="modal-footer clearfix">\n    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">\n        <%- L(\'textClose\') %>\n    </button>\n</div>';
 window.docmana.templates['uploaderFiles.html'] = '        <% for (var i=0, file; file= data.files[i]; i++) { %>\n<div class="file-upload file">\n    <span class="list-group-item holder">.</span>\n    <div class="progress">\n        <div class="progress-bar progress-bar-info" style="width: 0"></div>\n    </div>\n    <div class="info list-group-item clearfix">\n        <div class="table-row">\n            <div class="name table-column">\n                <%- file.name %>\n            </div>\n            <div class="size table-column">\n                Processing...\n            </div>\n            <!--<div class="folder pull-left">\n        我的文件\n    </div>-->\n            <div class="status table-column">\n                <!--<i class="fa fa-check-circle text-success"></i>-->\n                <span class="percent"></span>\n                <span class="error"></span>\n            </div>\n            <div class="operator table-column">\n                <% if (!i && !data.options.autoUpload) { %>\n                <button class="btn btn-primary btn-sm start" disabled>\n                    <i class="fa fa-upload"></i>\n                </button>\n                <% } %>\n                <% if (!i) { %>\n                <button class="btn btn-link btn-warning btn-xs cancel">\n                    <i class="fa fa-ban"></i>\n                </button>\n                <% } %>\n            </div>\n        </div>\n    </div>\n</div>\n        <% } %>\n';
-window.docmana.templates['uploaderTrigger.html'] = '<div class="btn-uploader" style="position:relative;"  title="<%- L(\'textFileUpload\') %>">\n    <button class="btn btn-default btn-sm">\n        <i class="fa fa-tasks"></i>\n    </button>\n    <span class="badge badge-notify"></span>\n</div>';
+window.docmana.templates['uploaderTrigger.html'] = '<div class="btn-uploader btn-group-sm" style="position:relative;"  title="<%- L(\'textFileUpload\') %>">\n    <button class="btn btn-default btn-sm">\n        <i class="fa fa-tasks"></i>\n    </button>\n    <span class="badge badge-notify"></span>\n</div>';
 window.docmana.templates['viewer.html'] = '<div class="modal-header">\n    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n        <span aria-hidden="true">&times;</span>\n    </button>\n    <h4 class="modal-title">�ļ�</h4>\n</div>\n<div class="modal-body no-padding docmana-viewer-body">\n\n</div>\n<div class="modal-footer clearfix">\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'cmdDownload\') %>"\n            data-action="download">\n        <i class="docmana-icon docmana-icon-download"></i>\n    </button>\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'textPreviousItem\') %>"\n            data-action="previous">\n        <i class="docmana-icon docmana-icon-back"></i>\n    </button>\n    <button type="button"\n            class="btn btn-default"\n            data-action="next"\n            title="<%- L(\'textNextItem\') %>">\n        <i class="docmana-icon docmana-icon-forward"></i>\n    </button>\n</div>';
 window.docmana.templates['workzoneIconsView.html'] = '<div class="icons-view docmana-workzone-view clearfix">\n</div>\n';
 window.docmana.templates['workzoneIconsViewItem.html'] = '<div id="<%- data.hash %>"\n     title="<%= T.fileMetadata(data) %>"\n     class="drag-block file-list-item <%- T.mime2Class(data.mime) %>"\n     data-name="<%- data.name %>">\n    <div class="filetype <%- T.name2IconClass(data.name, data.mime)%> drag-block"></div>\n    <div class="filename drag-block" title="<%- data.name %>">\n        <%- data.name %>\n    </div>\n</div>\n';
-window.docmana.templates['workzoneListView.html'] = '<div class="list-view">\n    <div class="datatable-header panel panel-default">\n        <table class="table table-bordered table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <thead>\n                <tr>\n                    <th><%- L(\'fileName\') %></th>\n                    <th><%- L(\'fileDateModified\') %></th>\n                    <th><%- L(\'fileType\') %></th>\n                    <th><%- L(\'fileSize\') %></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class="datatable-content">\n        <table class="table table-hover table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <tbody class="docmana-workzone-view"></tbody>\n        </table>\n    </div>\n</div>\n';
-window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %>"\n    class="file-list-item <%- T.mime2Class(data.mime) %>"\n    data-name="<%- data.name %>">\n    <td class="name">\n        <span title="<%= T.fileMetadata(data) %>">\n            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %> drag-block"></span>\n            <span class="filename drag-block">\n                <%- data.name %>\n            </span>\n        </span>\n\n    </td>\n    <td class="metadata date">\n        <span class="drag-block">\n            <%- T.formatDate(data.ts) %>\n        </span>\n    </td>\n    <td class="metadata type">\n        <span class="drag-block">\n            <%- L(\'kind\' + T.mime2Type(data.mime)) %>\n        </span>\n    </td>\n    <td class="metadata size">\n        <span class="drag-block">\n            <%- data.mime === \'directory\' ? \'\' : T.formatFileSize(data.size, true) %>\n        </span>\n    </td>\n</tr>\n';
+window.docmana.templates['workzoneListView.html'] = '<div class="list-view">\n    <div class="datatable-header panel panel-default">\n        <table class="table table-bordered table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <thead>\n                <tr>\n                    <th><%- L(\'fileName\') %></th>\n                    <th><%- L(\'fileDateModified\') %></th>\n                    <th><%- L(\'fileType\') %></th>\n                    <th><%- L(\'fileSize\') %></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class="datatable-content">\n        <table class="table table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <tbody class="docmana-workzone-view"></tbody>\n        </table>\n    </div>\n</div>\n';
+window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %>"\n    class="file-list-item <%- T.mime2Class(data.mime) %>"\n    data-name="<%- data.name %>">\n    <td class="name">\n        <span title="<%= T.fileMetadata(data) %>">\n            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %> drag-block"></span>\n            <span class="filename drag-block">\n                <%- data.name %>\n            </span>\n        </span>\n\n    </td>\n    <td class="metadata date text-muted">\n        <span class="drag-block">\n            <%- T.formatDate(data.ts) %>\n        </span>\n    </td>\n    <td class="metadata type text-muted">\n        <span class="drag-block">\n            <%- L(\'kind\' + T.mime2Type(data.mime)) %>\n        </span>\n    </td>\n    <td class="metadata size text-muted">\n        <span class="drag-block">\n            <%- data.mime === \'directory\' ? \'\' : T.formatFileSize(data.size, true) %>\n        </span>\n    </td>\n</tr>\n';
 
 (function () {
 
@@ -6161,19 +6161,19 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             selectable._mouseStop(null);
         },
 
-        setInputSelection: function (input, startPos, endPos) {
+        setInputSelection: function (input, start, end) {
             input.focus();
-            if (typeof input.selectionStart != "undefined") {
-                input.selectionStart = startPos;
-                input.selectionEnd = endPos;
-            } else if (document.selection && document.selection.createRange) {
-                // IE branch
-                input.select();
-                var range = document.selection.createRange();
-                range.collapse(true);
-                range.moveEnd("character", endPos);
-                range.moveStart("character", startPos);
-                range.select();
+            if (input.setSelectionRange) {
+                input.setSelectionRange(start, end);
+            } else if (typeof input.selectionStart != 'undefined') {
+                input.selectionStart = start;
+                input.selectionEnd = end;
+            } else if (input.createTextRange) {
+                var selRange = input.createTextRange();
+                selRange.collapse(true);
+                selRange.moveStart('character', start);
+                selRange.moveEnd('character', end - start);
+                selRange.select();
             }
         },
         setInputSelectionWithoutExtension: function ($input) {
@@ -6220,7 +6220,6 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 $editor.height($el.outerHeight());
             }
 
-            docmana.utils.setInputSelectionWithoutExtension($editor);
 
             $el.hide();
             $el.after($editor);
@@ -6237,6 +6236,9 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 $(this).remove();
                 $el.show();
             });
+
+            docmana.utils.setInputSelectionWithoutExtension($editor);
+
         }
     }
 
@@ -6260,7 +6262,8 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
         defaults: {
             autoRender: true,
             className: 'static',
-            panelClassName: 'panel no-margin panel-default'
+            panelClassName: 'panel no-margin panel-default',
+            commandOptions: {}
         },
         listen: function () {
             this.listenTo(this, 'rendered', function () {
@@ -6287,20 +6290,20 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             return this.$('.docmana-panel');
         },
         relayout: function () {
-
-            if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
-                this.$('.docmana-body').css({
-                    top: this.$('.docmana-heading').outerHeight(),
-                    bottom: this.$('.docmana-footer').outerHeight()
-                });
-                this.$('.docmana-workzone').css({
-                    top: this.$('.docmana-navigation').outerHeight()
-                });
-                this.$('.docmana-navigation .breadcrumb-group').css({
-                    'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
-                    'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
-                });
-            }
+            var a = this.$el.get(0).outerWidth;
+            //if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
+            //    this.$('.docmana-body').css({
+            //        top: this.$('.docmana-heading').outerHeight(),
+            //        bottom: this.$('.docmana-footer').outerHeight()
+            //    });
+            //    this.$('.docmana-workzone').css({
+            //        top: this.$('.docmana-navigation').outerHeight()
+            //    });
+            //    this.$('.docmana-navigation .breadcrumb-group').css({
+            //        'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
+            //        'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
+            //    });
+            //}
         },
         _initKernel: function () {
             var that = this;
@@ -6332,7 +6335,7 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                     _.forEach(cmds, function (cmd) {
                         var instance = docmana.commands[cmd](_.extend({
                             main: that
-                        }, that.props[cmd]));
+                        }, that.props.commandOptions[cmd]));
 
                         that.commands[cmd] = instance;
                     });
@@ -6994,11 +6997,11 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             var lang = docmana.resource;
             var strs = [];
             strs.push(data.name);
-            strs.push(lang('Type') + ': ' + lang('kind' + this.mime2Type(data.mime)));
+            strs.push(lang('fileType') + ': ' + lang('kind' + this.mime2Type(data.mime)));
             if (data.mime !== 'directory') {
-                strs.push(lang('Size') + ': ' + this.formatFileSize(data.size));
+                strs.push(lang('fileSize') + ': ' + this.formatFileSize(data.size));
             }
-            strs.push(lang('Date modified') + ': ' + this.formatDate(data.ts));
+            strs.push(lang('fileDateModified') + ': ' + this.formatDate(data.ts));
             return strs.join(' &#13; ');
         }
     }, docmana.utils);
@@ -7884,6 +7887,7 @@ var Plugins;
         listen: function () {
             this.listenTo(this.main(), 'started', function () {
                 var that = this;
+                if (!this.$el) return;
                 var $file = this.$el.find(':file');
                 var uploader = this.main().ui.uploader;
                 // 如果有 jquery file upload 控件，则初始化 uploader 容器
@@ -7899,7 +7903,7 @@ var Plugins;
                 }
             });
             this.listenTo(this, 'rendered', function () {
-          
+
 
             });
         },
@@ -8208,34 +8212,6 @@ var Plugins;
         return new Statusbar(options);
     }
 
-})();
-
-
-(function () {
-
-    "use strict";
-
-    docmana.ui.templates = {
-        toolbarBtn: $('#tpl-toolbar-btn').html(),
-        toolbarBtnUpload: $('#tpl-toolbar-btn-upload').html(),
-        toolbarBtnGroup: $('#tpl-toolbar-btn-group').html(),
-        toolbarSearch: $('#toolbarSearch').html(),
-        workzoneIconsView: $('#tpl-icons-view').html(),
-        workzoneListView: $('#tpl-list-view').html(),
-        workzoneIconsViewItem: $('#tpl-icons-view-item').html(),
-        workzoneListViewItem: $('#tpl-list-view-item').html(),
-        toolbarBtnSort: $('#tpl-toolbar-btn-sort').html(),
-        toolbarBtnLayout: $('#toolbarBtnLayout').html(),
-        tplNavigation: $('#tplNavigation').html(),
-        tplBreadcrumb: $('#tplBreadcrumb').html(),
-        tplStatusbar: $('#tplStatusbar').html(),
-        tplViewer: $('#tplViewer').html(),
-        tplMain: $('#tplMain').html(),
-        tplFileInfo: $('#tplFileInfo').html()
-    };
-
-
-    docmana.template.load(docmana.ui.templates);
 })();
 
 
@@ -8820,7 +8796,7 @@ var Plugins;
                         that._triggerSelectDebounce();
                     },
                     unselected: function (e, ui) {
-                       // $(ui.unselected).removeClass('bg-primary');
+                     //   $(ui.unselected).removeClass('bg-primary');
                         that._triggerSelectDebounce();
                     },
                     stop: function (e, ui) {
@@ -8977,7 +8953,7 @@ var Plugins;
         _initHotKeys: function () {
             var that = this;
 
-            // TODO: 添加图标布局下的up down 处理
+            // TODO: 添加图标布局下的 up down 处理
 
             this._$focusEl().bind('keydown.docmana', 'left', function (e) {
                 if (!that.isListLayout()) {
@@ -9275,3 +9251,4 @@ var Plugins;
 
 })();
 
+})();

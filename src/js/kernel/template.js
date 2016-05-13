@@ -40,11 +40,11 @@
             var lang = docmana.resource;
             var strs = [];
             strs.push(data.name);
-            strs.push(lang('Type') + ': ' + lang('kind' + this.mime2Type(data.mime)));
+            strs.push(lang('fileType') + ': ' + lang('kind' + this.mime2Type(data.mime)));
             if (data.mime !== 'directory') {
-                strs.push(lang('Size') + ': ' + this.formatFileSize(data.size));
+                strs.push(lang('fileSize') + ': ' + this.formatFileSize(data.size));
             }
-            strs.push(lang('Date modified') + ': ' + this.formatDate(data.ts));
+            strs.push(lang('fileDateModified') + ': ' + this.formatDate(data.ts));
             return strs.join(' &#13; ');
         }
     }, docmana.utils);

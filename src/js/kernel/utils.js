@@ -56,19 +56,19 @@
             selectable._mouseStop(null);
         },
 
-        setInputSelection: function (input, startPos, endPos) {
+        setInputSelection: function (input, start, end) {
             input.focus();
-            if (typeof input.selectionStart != "undefined") {
-                input.selectionStart = startPos;
-                input.selectionEnd = endPos;
-            } else if (document.selection && document.selection.createRange) {
-                // IE branch
-                input.select();
-                var range = document.selection.createRange();
-                range.collapse(true);
-                range.moveEnd("character", endPos);
-                range.moveStart("character", startPos);
-                range.select();
+            if (input.setSelectionRange) {
+                input.setSelectionRange(start, end);
+            } else if (typeof input.selectionStart != 'undefined') {
+                input.selectionStart = start;
+                input.selectionEnd = end;
+            } else if (input.createTextRange) {
+                var selRange = input.createTextRange();
+                selRange.collapse(true);
+                selRange.moveStart('character', start);
+                selRange.moveEnd('character', end - start);
+                selRange.select();
             }
         },
         setInputSelectionWithoutExtension: function ($input) {
@@ -115,7 +115,6 @@
                 $editor.height($el.outerHeight());
             }
 
-            docmana.utils.setInputSelectionWithoutExtension($editor);
 
             $el.hide();
             $el.after($editor);
@@ -132,6 +131,9 @@
                 $(this).remove();
                 $el.show();
             });
+
+            docmana.utils.setInputSelectionWithoutExtension($editor);
+
         }
     }
 

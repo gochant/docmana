@@ -14,7 +14,8 @@
         defaults: {
             autoRender: true,
             className: 'static',
-            panelClassName: 'panel no-margin panel-default'
+            panelClassName: 'panel no-margin panel-default',
+            commandOptions: {}
         },
         listen: function () {
             this.listenTo(this, 'rendered', function () {
@@ -41,20 +42,20 @@
             return this.$('.docmana-panel');
         },
         relayout: function () {
-
-            if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
-                this.$('.docmana-body').css({
-                    top: this.$('.docmana-heading').outerHeight(),
-                    bottom: this.$('.docmana-footer').outerHeight()
-                });
-                this.$('.docmana-workzone').css({
-                    top: this.$('.docmana-navigation').outerHeight()
-                });
-                this.$('.docmana-navigation .breadcrumb-group').css({
-                    'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
-                    'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
-                });
-            }
+            var a = this.$el.get(0).outerWidth;
+            //if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
+            //    this.$('.docmana-body').css({
+            //        top: this.$('.docmana-heading').outerHeight(),
+            //        bottom: this.$('.docmana-footer').outerHeight()
+            //    });
+            //    this.$('.docmana-workzone').css({
+            //        top: this.$('.docmana-navigation').outerHeight()
+            //    });
+            //    this.$('.docmana-navigation .breadcrumb-group').css({
+            //        'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
+            //        'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
+            //    });
+            //}
         },
         _initKernel: function () {
             var that = this;
@@ -86,7 +87,7 @@
                     _.forEach(cmds, function (cmd) {
                         var instance = docmana.commands[cmd](_.extend({
                             main: that
-                        }, that.props[cmd]));
+                        }, that.props.commandOptions[cmd]));
 
                         that.commands[cmd] = instance;
                     });

@@ -958,50 +958,50 @@
 .docmana.fixed .docmana-panel {
   height: 100%;
   position: relative;
-}
-.docmana.static .docmana-panel .docmana-heading,
-.docmana.fixed .docmana-panel .docmana-heading {
-  position: absolute;
-  width: 100%;
-  top: 0;
+  display: flex;
+  flex-direction: column;
 }
 .docmana.static .docmana-panel .docmana-body,
-.docmana.fixed .docmana-panel .docmana-body {
-  position: absolute;
-  width: 100%;
-  /*top: 41px; bottom: 41px;*/
+.docmana.fixed .docmana-panel .docmana-body,
+.docmana.static .docmana-panel .list-view,
+.docmana.fixed .docmana-panel .list-view {
+  display: flex;
+  flex-direction: column;
 }
-.docmana.static .docmana-panel .docmana-footer,
-.docmana.fixed .docmana-panel .docmana-footer {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
+.docmana.static .docmana-panel .docmana-navigation,
+.docmana.fixed .docmana-panel .docmana-navigation {
+  display: flex;
+  flex-direction: row;
 }
+.docmana.static .docmana-panel .breadcrumb-group,
+.docmana.fixed .docmana-panel .breadcrumb-group {
+  margin: 0 5px;
+}
+.docmana.static .docmana-panel .docmana-body,
+.docmana.fixed .docmana-panel .docmana-body,
 .docmana.static .docmana-panel .docmana-workzone,
-.docmana.fixed .docmana-panel .docmana-workzone {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  /*top: 40px;*/
-  overflow: auto;
+.docmana.fixed .docmana-panel .docmana-workzone,
+.docmana.static .docmana-panel .breadcrumb-group,
+.docmana.fixed .docmana-panel .breadcrumb-group,
+.docmana.static .docmana-panel .datatable-content,
+.docmana.fixed .docmana-panel .datatable-content {
+  flex-basis: 0;
+  position: relative;
+  overflow-y: auto;
+  flex-grow: 1;
 }
+.docmana.static .docmana-panel .datatable-header,
+.docmana.fixed .docmana-panel .datatable-header {
+  margin: 0;
+}
+.docmana.static .docmana-panel .list-view,
+.docmana.fixed .docmana-panel .list-view,
 .docmana.static .docmana-panel .icons-view,
-.docmana.fixed .docmana-panel .icons-view,
-.docmana.static .docmana-panel .list-view,
-.docmana.fixed .docmana-panel .list-view {
-  height: 100%;
-}
-.docmana.static .docmana-panel .list-view,
-.docmana.fixed .docmana-panel .list-view {
-  overflow: hidden;
-}
-.docmana.static .docmana-panel .list-view > .datatable-content,
-.docmana.fixed .docmana-panel .list-view > .datatable-content {
+.docmana.fixed .docmana-panel .icons-view {
   position: absolute;
   bottom: 0;
-  top: 32px;
-  overflow: auto;
-  overflow-y: scroll;
+  top: 0;
+  width: 100%;
 }
 .docmana.fixed .docmana-panel {
   position: fixed;
@@ -1015,8 +1015,9 @@
 .docmana fieldset[disabled] .btn {
   cursor: default;
 }
-.docmana table {
+.docmana .docmana-workzone table {
   table-layout: fixed;
+  border-collapse: separate;
 }
 .docmana .file-list-item {
   /*transition: background .2s;*/
@@ -1064,7 +1065,7 @@
   margin-right: 5px;
 }
 .docmana .list-view .file-list-item .metadata {
-  color: #6D6D87;
+  /*color: #6D6D87;*/
 }
 .docmana .list-view .file-list-item .filename {
   display: inline;
@@ -1113,7 +1114,9 @@
   width: 100%;
   font-size: 13px;
   text-align: center;
-  word-break: break-word;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  overflow: hidden;
 }
 .docmana .icons-view .file-list-item .inline-edit {
   width: 100%;
@@ -1182,7 +1185,6 @@
   padding-left: 0;
 }
 .docmana-statusbar {
-  line-height: 30px;
   /*.btn {
         border-color: transparent;
         background-color: transparent;

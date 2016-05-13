@@ -1,1 +1,64 @@
-﻿
+﻿.docmana {
+    &.static,
+    &.fixed {
+        height: 100%;
+
+        .docmana-panel {
+            height: 100%;
+            position: relative;
+
+
+            .docmana-heading {
+                position: absolute;
+                width: 100%;
+                top: 0;
+            }
+
+            .docmana-body {
+                position: absolute;
+                width: 100%;
+            }
+
+            .docmana-footer {
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+            }
+
+            .docmana-workzone {
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+                overflow: auto;
+            }
+
+            .icons-view,
+            .list-view {
+                height: 100%;
+            }
+
+            .list-view {
+                overflow: hidden;
+
+                > .datatable-content {
+                    position: absolute;
+                    bottom: 0;
+                    top: 32px;
+                    overflow: auto;
+                    overflow-y: scroll;
+                }
+            }
+        }
+    }
+}
+
+.docmana-navigation {
+    .nav-group {
+        float: left;
+    }
+
+    .search-group,
+    .refresh-group {
+        float: right;
+    }
+}

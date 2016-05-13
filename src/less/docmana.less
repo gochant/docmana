@@ -71,7 +71,6 @@
     outline: none;
 
 
-
     &.static,
     &.fixed {
         height: 100%;
@@ -79,48 +78,45 @@
         .docmana-panel {
             height: 100%;
             position: relative;
+            display: flex;
+            flex-direction: column;
 
-            .docmana-heading {
+            .docmana-body,
+            .list-view {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .docmana-navigation {
+                display: flex;
+                flex-direction: row;
+            }
+
+
+            .breadcrumb-group {
+                margin: 0 5px;
+            }
+
+            .docmana-body,
+            .docmana-workzone,
+            .breadcrumb-group,
+            .datatable-content {
+                flex-basis: 0;
+                position: relative;
+                overflow-y: auto;
+                flex-grow: 1;
+            }
+
+            .datatable-header {
+                margin: 0;
+            }
+
+            .list-view,
+            .icons-view {
                 position: absolute;
-                width: 100%;
+                bottom: 0;
                 top: 0;
-            }
-
-            .docmana-body {
-                position: absolute;
                 width: 100%;
-                /*top: 41px; bottom: 41px;*/
-            }
-
-            .docmana-footer {
-                position: absolute;
-                width: 100%;
-                bottom: 0;
-            }
-
-            .docmana-workzone {
-                position: absolute;
-                width: 100%;
-                bottom: 0;
-                /*top: 40px;*/
-                overflow: auto;
-            }
-
-            .icons-view,
-            .list-view {
-                height: 100%;
-            }
-
-            .list-view {
-                overflow: hidden;
-
-                > .datatable-content {
-                    position: absolute;
-                    bottom: 0;
-                    top: 32px;
-                    overflow: auto;
-                    overflow-y: scroll;
-                }
             }
         }
     }
@@ -139,8 +135,9 @@
         cursor: default;
     }
 
-    table {
+    .docmana-workzone  table {
         table-layout: fixed;
+        border-collapse:separate;
     }
 
     .file-list-item {
@@ -207,7 +204,7 @@
             }
 
             .metadata {
-                color: #6D6D87;
+                /*color: #6D6D87;*/
             }
 
             .filename {
@@ -266,7 +263,9 @@
                 width: 100%;
                 font-size: 13px;
                 text-align: center;
-                word-break: break-word;
+                -ms-word-break: break-all;
+                word-break: break-all;
+                overflow: hidden;
             }
 
             .inline-edit {
@@ -350,7 +349,6 @@
 }
 
 .docmana-statusbar {
-    line-height: 30px;
 
     .text-total {
         margin-right: 30px;

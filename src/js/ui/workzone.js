@@ -245,7 +245,7 @@
                         that._triggerSelectDebounce();
                     },
                     unselected: function (e, ui) {
-                       // $(ui.unselected).removeClass('bg-primary');
+                     //   $(ui.unselected).removeClass('bg-primary');
                         that._triggerSelectDebounce();
                     },
                     stop: function (e, ui) {
@@ -402,7 +402,7 @@
         _initHotKeys: function () {
             var that = this;
 
-            // TODO: 添加图标布局下的up down 处理
+            // TODO: 添加图标布局下的 up down 处理
 
             this._$focusEl().bind('keydown.docmana', 'left', function (e) {
                 if (!that.isListLayout()) {

@@ -12,6 +12,7 @@
         listen: function () {
             this.listenTo(this.main(), 'started', function () {
                 var that = this;
+                if (!this.$el) return;
                 var $file = this.$el.find(':file');
                 var uploader = this.main().ui.uploader;
                 // 如果有 jquery file upload 控件，则初始化 uploader 容器
@@ -27,7 +28,7 @@
                 }
             });
             this.listenTo(this, 'rendered', function () {
-          
+
 
             });
         },

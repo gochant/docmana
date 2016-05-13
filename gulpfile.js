@@ -10,6 +10,7 @@ var less = require('gulp-less');
 var cssmin = require('gulp-cssmin');
 var copy = require('gulp-contrib-copy');
 var webserver = require('gulp-webserver');
+var wrap = require("gulp-wrap");
 
 var paths = {
     scripts: [
@@ -39,14 +40,15 @@ gulp.task('clean', function () {
 
 gulp.task('templates', function () {
     return gulp.src('src/tpl/**/*')
-      .pipe(htmlToJs({ global: 'window.docmana.templates', concat: 'templates.js' }))
-      .pipe(gulp.dest('src/js'));
+        .pipe(htmlToJs({ global: 'window.docmana.templates', concat: 'templates.js' }))
+        .pipe(gulp.dest('src/js'));
 });
 
 gulp.task('scripts', ['templates', 'clean'], function () {
     return gulp.src(paths.vendorScripts.concat(paths.scripts))
         .pipe(sourcemaps.init())
         .pipe(concat('docmana.js'))
+        .pipe(wrap('(function () {<%= contents %>})();'))
         .pipe(gulp.dest('dist/js'))
         .pipe(rename('docmana.min.js'))
         .pipe(uglify())
@@ -56,9 +58,9 @@ gulp.task('scripts', ['templates', 'clean'], function () {
 
 gulp.task('images', ['clean'], function () {
     return gulp.src(paths.images)
-      //.pipe(imagemin({ optimizationLevel: 5 }))
-      .pipe(copy())
-      .pipe(gulp.dest('dist/img'));
+        //.pipe(imagemin({ optimizationLevel: 5 }))
+        .pipe(copy())
+        .pipe(gulp.dest('dist/img'));
 });
 
 gulp.task('less', ['clean'], function () {
@@ -72,13 +74,13 @@ gulp.task('less', ['clean'], function () {
         .pipe(gulp.dest('dist/css'));
 });
 
-gulp.task('webserver', function() {
-  gulp.src('./')
-    .pipe(webserver({
-      livereload: true,
-      directoryListing: true,
-      open: true
-    }));
+gulp.task('webserver', function () {
+    gulp.src('./')
+        .pipe(webserver({
+            livereload: true,
+            directoryListing: true,
+            open: true
+        }));
 });
 
 

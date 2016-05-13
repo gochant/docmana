@@ -65,7 +65,7 @@ $(function () {
             url: serverUrl
         },
         workzone: {
-            layout: 'icons'
+            layout: 'list'
         }
     });
 });
