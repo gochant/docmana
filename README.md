@@ -5,7 +5,7 @@ docmana 是一个 js 库，用于创建可扩展的web端的文件管理器
 ## 为什么使用它？
 
 * UI 简单直接，布局仿 Windows File Explorer，支持快捷键
-* 样式基于 Bootstrap，也可重写所有模板基于其他样式库
+* 样式基于 Bootstrap、FontAwesome，也可重写所有模板和样式基于其他UI库和图标库
 * 模块化，预留扩展点，定制或扩展方便
 * 与后端主要交互接口兼容 [elFinder](https://github.com/Studio-42/elFinder)，服务器端可重用现有的 elFinder Connector（需稍作更改）
 
@@ -130,7 +130,6 @@ gulp less
 * **待改进** 新建文件夹，由于冲突，并未采用 Windows 快捷键：Ctrl+Alt+N，而是 Alt+N
 * **待改进** 不支持右键菜单
 
-* 可以自定义样式，不依赖 FontAwesome 的图标
-* Backbone 用了它的 View，可以自己实现一个，那么可不用 Backbone
+* 默认样式用的文件图标是网上随便找的，来源于[微云](http://www.weiyun.com/)，仅作技术演示不商用，如果实际用，需要重写样式使用自己的图标
 * 最终打包的版本包含了 jquery-ui 的定制版（用于实现拖拽选择）、jquery form（用于 ajax 提交文件时的兼容性）等，因此
 有点大，后续会考虑提供轻量级版本，或自己更改 gulp 配置 
