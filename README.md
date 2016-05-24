@@ -22,8 +22,15 @@ docmana 是一个 js 库，用于创建可扩展的web端的文件管理器
 * [Bootstrap](https://github.com/twbs/bootstrap)（= 3.x）
 * [Lodash](https://github.com/lodash/lodash) （>= 4.x）
 * [Backbone](https://github.com/jashkenas/backbone)（或 veronica）
+* [FontAwesome](https://github.com/FortAwesome/Font-Awesome)
 
-* FontAwesome 
+## 示例
+
+![Preview](preview.png)
+
+[Demo](http://gochant.github.io/docmana)
+
+上面的例子仅仅就是看看，没有后台不能用，自己部署就需要写一个或者找一个 elFinder 现成的
 
 
 ## 开始使用
@@ -69,7 +76,11 @@ $(function () {
 
 ## API
 
-### 获取选中文件
+暂时没有刻意暴露接口，但因为是模块化和事件驱动开发，还是可以比较简便的实现一些常用功能
+
+举个例子：
+
+**获取选中文件**
 
 ```
 var instance = $('#docmana').data('docmana');
@@ -93,30 +104,33 @@ gulp less
 
 ## 当前版本一些问题和说明
 
+### 快捷键
+
+* `Ctrl+C`、`Ctrl+X`、`Ctrl+V` 剪贴板相关操作
+* 预览模式和图标模式下，`Left`、`Right` 预览（选中）上一条、下一条
+* 列表模式下，`Up`、`Down` 选中上一条、下一条
+* `Alt+Left`、`Alt+Right` 后退、前进
+* `F2` 重命名
+* `Del` 删除
+* `Alt+N` 新建文件夹
+* `Return` 打开（查看）文件（夹） 
+* `Esc` 关闭对话框
+
 ### 浏览器兼容性
 
 在 Chrome 50 和 IE11 下进行了测试
 
-### 说明
+### 一些说明
 
 * **bug** 重命名后选择的文件可能会发生不一致
-* **bug** List 模式下，可能一些 theme 下表头和内容区布局会发生几个像素的瑕疵
-* **bug** 在 chrome 46 下，重命名全选不起作用
-* **体验** 未建立缓冲区进行懒加载，大量文件可能会造成界面卡顿
-* **体验** 长时操作未没有等待状态
-* **体验** List 模式下的拖拽行为与 Windows File Explorer 下有一些不一致，空白区域不可拖拽
-* **体验** Shift 选择模式与 Windows File Explorer 有一些不一致
-* **体验** 剪切时的文件透明度变化与 Windows 下有一些不一致
-* **体验** 图标视图下，使用方向键在工作区进行导航时，不支持上下方向
-* 新建文件夹，由于冲突，并未采用 Windows 快捷键：Ctrl+Alt+N，而是 Alt+N
-* 在不同文件夹间拷贝时，并未判断文件的重复
-* 不支持右键菜单
+* **待改进** 在不同文件夹间拷贝时，并未判断文件的重复
+* **待改进** 未建立缓冲区进行懒加载，大量文件可能会造成界面卡顿
+* **待改进** 长时操作没有等待状态
+* **待改进** 图标视图下，使用方向键在工作区进行导航时，不支持上下方向
+* **待改进** 新建文件夹，由于冲突，并未采用 Windows 快捷键：Ctrl+Alt+N，而是 Alt+N
+* **待改进** 不支持右键菜单
 
-### 后续开发计划
-
-* 增强的图片预览组件
-* 分组显示
-* 上传类型控制
-* 访问控制
-
-
+* 可以自定义样式，不依赖 FontAwesome 的图标
+* Backbone 用了它的 View，可以自己实现一个，那么可不用 Backbone
+* 最终打包的版本包含了 jquery-ui 的定制版（用于实现拖拽选择）、jquery form（用于 ajax 提交文件时的兼容性）等，因此
+有点大，后续会考虑提供轻量级版本，或自己更改 gulp 配置 

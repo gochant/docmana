@@ -54,7 +54,7 @@ $(function () {
     }).val(initData.theme).change();
 
 
-    var serverUrl = 'http://192.168.1.18:8097/FileManager/Medias/Index';  // 替换为实际的
+    var serverUrl = 'http://localhost:19775/Medias/Index';  // TODO: 替换为实际的
     
     $('#docmana').docmana({
         store: {
