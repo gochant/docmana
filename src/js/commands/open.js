@@ -13,7 +13,7 @@
         },
         exec: function (info) {
 
-            if (info == null) {
+            if (info == null || info.mime == null) {
                 var id = this.workzone().select().attr('id');
                 info = this.store().byId(id);
             }

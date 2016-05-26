@@ -1,5 +1,6 @@
 (function () {
     "use strict";
+
     docmana.utils = {
         // 格式化字符串，类似 C# string.format
         formatString: function () {
@@ -134,6 +135,19 @@
 
             docmana.utils.setInputSelectionWithoutExtension($editor);
 
+        },
+        ieVersion: function () {
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer, return version number
+            {
+                return parseInt(ua.substring(msie + 5, ua.indexOf(".", msie)));
+            }
+            else  // If another browser, return false
+            {
+                return false;
+            }
         }
     }
 

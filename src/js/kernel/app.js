@@ -42,20 +42,24 @@
             return this.$('.docmana-panel');
         },
         relayout: function () {
-            var a = this.$el.get(0).outerWidth;
-            //if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
-            //    this.$('.docmana-body').css({
-            //        top: this.$('.docmana-heading').outerHeight(),
-            //        bottom: this.$('.docmana-footer').outerHeight()
-            //    });
-            //    this.$('.docmana-workzone').css({
-            //        top: this.$('.docmana-navigation').outerHeight()
-            //    });
-            //    this.$('.docmana-navigation .breadcrumb-group').css({
-            //        'margin-left': this.$('.docmana-navigation .nav-group').outerWidth() + 5,
-            //        'margin-right': this.$('.docmana-navigation .search-group').outerWidth() + 5
-            //    });
-            //}
+            var ieVersion = docmana.utils.ieVersion();
+            if (ieVersion && ieVersion <= 9) {
+                if (this.$el.hasClass('static') || this.$el.hasClass('fixed')) {
+                    this.$('.docmana-body').css({
+                        top: this.$('.docmana-heading').outerHeight(),
+                        bottom: this.$('.docmana-footer').outerHeight()
+                    });
+                    this.$('.docmana-workzone').css({
+                        top: this.$('.docmana-navigation').outerHeight()
+                    });
+                    this.$('.docmana-navigation .breadcrumb-group').css({
+                        'margin-left': '5px',
+                        'width': this.$('.docmana-navigation').width()
+                            - this.$('.docmana-navigation .nav-group').outerWidth()
+                            - this.$('.docmana-navigation .search-group').outerWidth() - 10
+                    });
+                }
+            }
         },
         _initKernel: function () {
             var that = this;
@@ -80,7 +84,7 @@
         },
         _initCommands: function () {
             var that = this;
-            _.forEach(_.flatten(this.props.commands), function (cmds) {
+            _.forEach(_.flatten(this.props.commands, true), function (cmds) {
 
                 if (_.isArray(cmds)) {
 

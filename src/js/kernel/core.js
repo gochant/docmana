@@ -2,6 +2,64 @@
 
     "use strict";
 
+    // polyfill
+    if (typeof Object.create != 'function') {
+        Object.create = (function () {
+            var Temp = function () { };
+            return function (prototype) {
+                if (arguments.length > 1) {
+                    throw Error('Second argument not supported');
+                }
+                if (prototype !== Object(prototype) && prototype !== null) {
+                    throw TypeError('Argument must be an object or null');
+                }
+                if (prototype === null) {
+                    return {};
+                }
+                Temp.prototype = prototype;
+                var result = new Temp();
+                Temp.prototype = null;
+                return result;
+            };
+        })();
+    }
+
+    // underscore polyfill
+    if (!_.remove) {
+        _.remove = function (data, fn) {
+            for (var i = data.length - 1; i > -1; i--) {
+                var item = data[i];
+                if (fn(item)) {
+                    data.splice(i, 1);
+                }
+            }
+        }
+    }
+
+    if (!_.orderBy) {
+        _.orderBy = function (collection, iteratees, orders) {
+            _.each(iteratees, function (iterate, i) {
+                collection = _.sortBy(collection, function (item) {
+                    return item[iterate];
+                });
+                if (orders[i] === 'desc') {
+                    collection = collection.reverse();
+                }
+            });
+            return collection;
+        }
+    }
+    if (!_.upperFirst) {
+        _.upperFirst = function (string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    }
+    if (!_.trim) {
+        _.trim = String.prototype.trim || function () {
+            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        };
+    }
+
     var extend = function (protoProps, staticProps) {
         var parent = this;
         var child;
@@ -38,7 +96,7 @@
         toolbar: function () {
             return this.main().ui.toolbar;
         },
-        statusbar: function(){
+        statusbar: function () {
             return this.main().ui.statusbar;
         },
         workzone: function () {

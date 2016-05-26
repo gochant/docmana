@@ -20,9 +20,16 @@ docmana 是一个 js 库，用于创建可扩展的web端的文件管理器
 
 * [jQuery](https://github.com/jquery/jquery)（>= 1.11.x）
 * [Bootstrap](https://github.com/twbs/bootstrap)（= 3.x）
-* [Lodash](https://github.com/lodash/lodash) （>= 4.x）
+* [Lodash](https://github.com/lodash/lodash) （>= 4.x）[recommend] or [Underscore](http://underscorejs.org/)
+* [jQueryUI(only: draggable droppable selectable)](https://github.com/jquery/jquery-ui)（>= 1.11.x）
+* [jQuery form](https://github.com/malsup/form)
 * [Backbone](https://github.com/jashkenas/backbone)（或 veronica）
 * [FontAwesome](https://github.com/FortAwesome/Font-Awesome)
+
+注意：
+
+* jquery-ui 仅包含 draggable、droppable、selectable，如果使用完整版 jquery ui，button widget 会与 bootstrap 的 button 冲突
+
 
 ## 示例
 
@@ -120,6 +127,9 @@ gulp less
 
 在 Chrome 50 和 IE11 下进行了测试
 
+也针对 IE8、IE9 做了一些修补，理论上应该能正常工作，
+需要注意的是，IE8 下 Lodash 不兼容，因此应该使用 Underscore
+
 ### 一些说明
 
 * **bug** 重命名后选择的文件可能会发生不一致
@@ -131,5 +141,3 @@ gulp less
 * **待改进** 不支持右键菜单
 
 * 默认样式用的文件图标是网上随便找的，来源于[微云](http://www.weiyun.com/)，仅作技术演示不商用，如果实际用，需要重写样式使用自己的图标
-* 最终打包的版本包含了 jquery-ui 的定制版（用于实现拖拽选择）、jquery form（用于 ajax 提交文件时的兼容性）等，因此
-有点大，后续会考虑提供轻量级版本，或自己更改 gulp 配置 

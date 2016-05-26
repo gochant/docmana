@@ -6,5 +6,9 @@
   {
     "outputFile": "src/less/docmana.css",
     "inputFile": "src/less/docmana.less"
+  },
+  {
+    "outputFile": "src/less/docmana-ie.css",
+    "inputFile": "src/less/docmana-ie.less"
   }
 ]

@@ -9,20 +9,7 @@
     UMD module pattern from https://github.com/umdjs/umd/blob/master/templates/returnExports.js
 */
 
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define([], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like environments that support module.exports,
-        // like Node.
-        module.exports = factory();
-    } else {
-        // Browser globals (root is window)
-        root.PDFObject = factory();
-  }
-}(this, function () {
+(function () {
 
     "use strict";
     //jshint unused:true
@@ -31,7 +18,7 @@
     //Will choke on undefined navigator and window vars when run on server
     //Return boolean false and exit function when running server-side
 
-    if(typeof window === "undefined" || typeof navigator === "undefined"){ return false; }
+    if (typeof window === "undefined" || typeof navigator === "undefined") { return false; }
 
     var pdfobjectversion = "2.0.201604172",
         supportsPDFs,
@@ -47,7 +34,7 @@
         embed,
         getTargetElement,
         generatePDFJSiframe,
-        isIOS = (function (){ return (/iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase())); })(),
+        isIOS = (function () { return (/iphone|ipad|ipod/i.test(navigator.userAgent.toLowerCase())); })(),
         generateEmbedElement;
 
 
@@ -55,7 +42,7 @@
        Supporting functions
        ---------------------------------------------------- */
 
-    createAXO = function (type){
+    createAXO = function (type) {
         var ax;
         try {
             ax = new ActiveXObject(type);
@@ -71,22 +58,22 @@
     //so check the first one for older IE, and the second for IE11
     //FWIW, MS Edge (replacing IE11) does not support ActiveX at all, both will evaluate false
     //Constructed as a method (not a prop) to avoid unneccesarry overhead -- will only be evaluated if needed
-    isIE = function (){ return !!(window.ActiveXObject || "ActiveXObject" in window); };
+    isIE = function () { return !!(window.ActiveXObject || "ActiveXObject" in window); };
 
     //If either ActiveX support for "AcroPDF.PDF" or "PDF.PdfCtrl" are found, return true
     //Constructed as a method (not a prop) to avoid unneccesarry overhead -- will only be evaluated if needed
-    supportsPdfActiveX = function (){ return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); };
+    supportsPdfActiveX = function () { return !!(createAXO("AcroPDF.PDF") || createAXO("PDF.PdfCtrl")); };
 
     //Determines whether PDF support is available
     supportsPDFs = (supportsPdfMimeType || (isIE() && supportsPdfActiveX()));
 
     //Create a fragment identifier for using PDF Open parameters when embedding PDF
-    buildFragmentString = function(pdfParams){
+    buildFragmentString = function (pdfParams) {
 
         var string = "",
             prop;
 
-        if(pdfParams){
+        if (pdfParams) {
 
             for (prop in pdfParams) {
                 if (pdfParams.hasOwnProperty(prop)) {
@@ -95,7 +82,7 @@
             }
 
             //The string will be empty if no PDF Params found
-            if(string){
+            if (string) {
 
                 string = "#" + string;
 
@@ -110,18 +97,18 @@
 
     };
 
-    log = function (msg){
-        if(typeof console !== "undefined" && console.log){
+    log = function (msg) {
+        if (typeof console !== "undefined" && console.log) {
             console.log("[PDFObject] " + msg);
         }
     };
 
-    embedError = function (msg){
+    embedError = function (msg) {
         log(msg);
         return false;
     };
 
-    getTargetElement = function (targetSelector){
+    getTargetElement = function (targetSelector) {
 
         //Default to body for full-browser PDF
         var targetNode = document.body;
@@ -129,7 +116,7 @@
         //If a targetSelector is specified, check to see whether
         //it's passing a selector, jQuery object, or an HTML element
 
-        if(typeof targetSelector === "string"){
+        if (typeof targetSelector === "string") {
 
             //Is CSS selector
             targetNode = document.querySelector(targetSelector);
@@ -139,7 +126,7 @@
             //Is jQuery element. Extract HTML node
             targetNode = targetSelector.get(0);
 
-        } else if (typeof targetSelector.nodeType !== "undefined" && targetSelector.nodeType === 1){
+        } else if (typeof targetSelector.nodeType !== "undefined" && targetSelector.nodeType === 1) {
 
             //Is HTML element
             targetNode = targetSelector;
@@ -150,7 +137,7 @@
 
     };
 
-    generatePDFJSiframe = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id){
+    generatePDFJSiframe = function (targetNode, url, pdfOpenFragment, PDFJS_URL, id) {
 
         var fullURL = PDFJS_URL + "?file=" + encodeURIComponent(url) + pdfOpenFragment;
         var scrollfix = (isIOS) ? "-webkit-overflow-scrolling: touch; overflow-y: scroll; " : "overflow: hidden; ";
@@ -163,11 +150,11 @@
 
     };
 
-    generateEmbedElement = function (targetNode, targetSelector, url, pdfOpenFragment, width, height, id){
+    generateEmbedElement = function (targetNode, targetSelector, url, pdfOpenFragment, width, height, id) {
 
         var style = "";
 
-        if(targetSelector && targetSelector !== document.body){
+        if (targetSelector && targetSelector !== document.body) {
             style = "width: " + width + "; height: " + height + ";";
         } else {
             style = "position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;";
@@ -180,10 +167,10 @@
 
     };
 
-    embed = function(url, targetSelector, options){
+    embed = function (url, targetSelector, options) {
 
         //Ensure URL is available. If not, exit now.
-        if(typeof url !== "string"){ return embedError("URL is not valid"); }
+        if (typeof url !== "string") { return embedError("URL is not valid"); }
 
         //If targetSelector is not defined, convert to boolean
         targetSelector = (typeof targetSelector !== "undefined") ? targetSelector : false;
@@ -206,11 +193,11 @@
             fallbackHTML_default = "<p>This browser does not support inline PDFs. Please download the PDF to view it: <a href='[url]'>Download PDF</a></p>";
 
         //If target element is specified but is not valid, exit without doing anything
-        if(!targetNode){ return embedError("Target element cannot be determined"); }
+        if (!targetNode) { return embedError("Target element cannot be determined"); }
 
 
         //page option overrides pdfOpenParams, if found
-        if(page){
+        if (page) {
             pdfOpenParams.page = page;
         }
 
@@ -218,21 +205,21 @@
         pdfOpenFragment = buildFragmentString(pdfOpenParams);
 
         //Do the dance
-        if(forcePDFJS && PDFJS_URL){
+        if (forcePDFJS && PDFJS_URL) {
 
             return generatePDFJSiframe(targetNode, url, pdfOpenFragment, PDFJS_URL, id);
 
-        } else if(supportsPDFs){
+        } else if (supportsPDFs) {
 
             return generateEmbedElement(targetNode, targetSelector, url, pdfOpenFragment, width, height, id);
 
         } else {
 
-            if(PDFJS_URL){
+            if (PDFJS_URL) {
 
                 return generatePDFJSiframe(targetNode, url, pdfOpenFragment, PDFJS_URL, id);
 
-            } else if(fallbackLink){
+            } else if (fallbackLink) {
 
                 fallbackHTML = (typeof fallbackLink === "string") ? fallbackLink : fallbackHTML_default;
                 targetNode.innerHTML = fallbackHTML.replace(/\[url\]/g, url);
@@ -245,10 +232,9 @@
 
     };
 
-    return {
-        embed: function (a,b,c){ return embed(a,b,c); },
+    window.PDFObject = {
+        embed: function (a, b, c) { return embed(a, b, c); },
         pdfobjectversion: (function () { return pdfobjectversion; })(),
-        supportsPDFs: (function (){ return supportsPDFs; })()
+        supportsPDFs: (function () { return supportsPDFs; })()
     };
-
-}));
+})();

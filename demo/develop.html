@@ -6,8 +6,12 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link id="theme-style" href="assets/bootstrap/themes/default.css" rel="stylesheet" />
-    <!--<link href="../dist/css/docmana.css" rel="stylesheet" />-->
-    <link href="../src/less/docmana.css" rel="stylesheet" />
+    <link href="../src/less/docmana.css" rel="stylesheet"/>
+    <!--[if lte IE 9]>
+        <link href="../dist/css/docmana-ie.css" rel="stylesheet" />
+        <script src="assets/respond.min.js"></script>
+    <![endif]-->
+
     <style>
         body {
             padding: 20px 0;
@@ -60,10 +64,10 @@
     <script src="assets/backbone.min.js"></script>
     <script src="assets/jquery.noty.packaged.js"></script>
     <script src="../src/js/vendor/date.format.js"></script>
-    <script src="../src/js/vendor/jquery-ui.js"></script>
+    <script src="assets/jquery-ui.js"></script>
     <script src="../src/js/vendor/jquery.autosize.input.js"></script>
     <script src="../src/js/vendor/jquery.fileDownload.js"></script>
-    <script src="../src/js/vendor/jquery.form.js"></script>
+    <script src="assets/jquery.form.js"></script>
     <script src="../src/js/vendor/jquery.hotkeys.js"></script>
     <script src="../src/js/vendor/pdfobject.js"></script>
     <script src="assets/jquery.iframe-transport.js"></script>

@@ -50,7 +50,10 @@
     }, docmana.utils);
 
     docmana.templateHelper = templateHelper;
-
+    if (!_.templateSettings.imports) {
+        _.docmanaTemplateHelper = templateHelper;
+        _.docmanaResource = docmana.resource;
+    }
     docmana.template = {
         _cache: {}
     };
@@ -67,6 +70,9 @@
     }
 
     docmana.template.compile = function (tpl) {
+        if (!_.templateSettings.imports) {
+            tpl = tpl.replace(/T\./g, '_.docmanaTemplateHelper.').replace(/L\(/g, '_.docmanaResource(');
+        }
         return _.template(tpl, {
             'imports': {
                 '$': jQuery,

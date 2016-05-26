@@ -11,13 +11,14 @@ var cssmin = require('gulp-cssmin');
 var copy = require('gulp-contrib-copy');
 var webserver = require('gulp-webserver');
 var wrap = require("gulp-wrap");
+var wrapUmd = require('gulp-wrap-umd');
 
 var paths = {
     scripts: [
         'src/js/docmana.js',
-        'src/js/templates.js',
         'src/js/kernel/core.js',
         'src/js/kernel/utils.js',
+        'src/js/templates.js',
         'src/js/kernel/app.js',
         'src/js/kernel/clipboard.js',
         'src/js/kernel/history.js',
@@ -31,6 +32,12 @@ var paths = {
         'src/js/i18n/**/*.js'
     ],
     vendorScripts: ['src/js/vendor/**/*.js'],
+    liteVendorScripts: [
+      'src/js/vendor/date.format.js',
+      'src/js/vendor/jquery.autosize.input.js',
+      'src/js/vendor/jquery.fileDownload.js',
+      'src/js/vendor/jquery.hotkeys.js'
+    ],
     images: 'src/img/**/*'
 };
 
@@ -45,15 +52,36 @@ gulp.task('templates', function () {
 });
 
 gulp.task('scripts', ['templates', 'clean'], function () {
-    return gulp.src(paths.vendorScripts.concat(paths.scripts))
-        .pipe(sourcemaps.init())
-        .pipe(concat('docmana.js'))
-        .pipe(wrap('(function () {<%= contents %>})();'))
-        .pipe(gulp.dest('dist/js'))
-        .pipe(rename('docmana.min.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('dist/js'));
+    var contents = [
+        {
+            src: paths.vendorScripts.concat(paths.scripts),
+            dest: 'docmana'
+        }
+        //, {
+        //    src: paths.liteVendorScripts.concat(paths.scripts),
+        //    dest: 'docmana.lite'
+        //}
+    ];
+    contents.forEach(function (cnt) {
+        gulp.src(cnt.src)
+         .pipe(sourcemaps.init())
+         .pipe(concat(cnt.dest + '.js'))
+         .pipe(wrapUmd({
+             deps: [
+                 { name: 'jquery', globalName: 'jQuery', paramName: '$' },
+                 { name: 'lodash', globalName: '_', paramName: '_' },
+                 { name: 'backbone', globalName: 'Backbone', paramName: 'Backbone' },
+                 { name: 'bootstrap', globalName: 'undefined', paramName: 'undefined' }
+             ],
+             exports: 'window.docmana',
+             namespace: 'docmana'
+         }))
+         .pipe(gulp.dest('dist/js'))
+         .pipe(rename(cnt.dest + '.min.js'))
+         .pipe(uglify())
+         .pipe(sourcemaps.write('./'))
+         .pipe(gulp.dest('dist/js'));
+    });
 });
 
 gulp.task('images', ['clean'], function () {
@@ -64,14 +92,17 @@ gulp.task('images', ['clean'], function () {
 });
 
 gulp.task('less', ['clean'], function () {
-    return gulp.src('src/less/docmana.less')
-        .pipe(sourcemaps.init())
-        .pipe(less())
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('dist/css'))
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(cssmin())
-        .pipe(gulp.dest('dist/css'));
+    var lessFiles = ['src/less/docmana.less', 'src/less/docmana-ie.less'];
+    lessFiles.forEach(function (file) {
+        gulp.src(file)
+            .pipe(sourcemaps.init())
+            .pipe(less())
+            .pipe(sourcemaps.write('./'))
+            .pipe(gulp.dest('dist/css'))
+            .pipe(rename({ suffix: '.min' }))
+            .pipe(cssmin())
+            .pipe(gulp.dest('dist/css'));
+    });
 });
 
 gulp.task('webserver', function () {

@@ -6,11 +6,7 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link id="theme-style" href="assets/bootstrap/themes/default.css" rel="stylesheet" />
-    <link href="../dist/css/docmana.css" rel="stylesheet"/>
-    <!--[if lte IE 8]>
-        <link href="../dist/css/docmana-ie.css" rel="stylesheet" />
-        <script src="assets/respond.min.js"></script>
-    <![endif]-->
+    <link href="../dist/css/docmana.css" rel="stylesheet" />
     <style>
         body {
             padding: 20px 0;
@@ -56,19 +52,32 @@
             <div id="docmana"></div>
         </div>
     </div>
+    <script src="../src/js/vendor/pdfobject.js"></script>
+    <script src="assets/require.js"></script>
+    <script>
+        require.config({
+            paths: {
+                'jquery': './assets/jquery.min',
+                'lodash': './assets/lodash.min',
+                'bootstrap': './assets/bootstrap.min',
+                'backbone': './assets/backbone.min',
+                'underscore': './assets/underscore-min',
+                'jquery.ui.widget': './assets/jquery.ui.widget',
+                'docmana': '../dist/js/docmana.lite',
+                'jquery-ui': './assets/jquery-ui',
+                'pdfobject': '../src/js/vendor/pdfobject',
+                'jquery.form': './assets/jquery.form'
+            },
+            shim: {
+                docmana: { deps: ['jquery-ui', 'jquery.form'] }
+            }
+        });
 
-    <script src="assets/jquery.min.js"></script>
-    <!--<script src="assets/underscore-min.js"></script>-->
-    <script src="assets/lodash.min.js"></script>
-    <script src="assets/bootstrap.min.js"></script>
-    <script src="assets/backbone.min.js"></script>
-    <script src="assets/jquery-ui.js"></script>
-    <script src="assets/jquery.form.js"></script>
-    <script src="../dist/js/docmana.js"></script>
-    <script src="assets/jquery.noty.packaged.js"></script>
-    <script src="assets/jquery.iframe-transport.js"></script>
-    <script src="assets/jquery.fileupload.js"></script>
-    <script src="app.js"></script>
+        require(['app', './assets/jquery.noty.packaged',
+                './assets/jquery.iframe-transport',
+                './assets/jquery.fileupload'], function () {
+                });
+    </script>
 </body>
 
 </html>
