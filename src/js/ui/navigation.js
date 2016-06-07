@@ -56,12 +56,13 @@
         _linkHandler: function (e) {
             e.preventDefault();
             var hash = $(e.currentTarget).attr('data-hash');
-            this.main().exec('open', this.history().byId(hash));
+            this.main().exec('open', true, this.history().byId(hash));
         }
     });
 
+    docmana.ui.Navigation = Navigation;
     docmana.ui.navigation = function (options) {
-        return new Navigation(options);
+        return new docmana.ui.Navigation(options);
     }
 
 })();

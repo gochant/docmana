@@ -111,6 +111,12 @@
                 margin: 0;
             }
 
+            .list-view {
+                .datatable-content {
+                    overflow-y: scroll;
+                }
+            }
+
             .list-view,
             .icons-view {
                 position: absolute;
@@ -135,9 +141,9 @@
         cursor: default;
     }
 
-    .docmana-workzone  table {
+    .docmana-workzone table {
         table-layout: fixed;
-        border-collapse:separate;
+        border-collapse: separate;
     }
 
     .file-list-item {
@@ -208,7 +214,7 @@
             }
 
             .filename {
-                display: inline;
+                display: inline-block;
             }
 
             > td {
@@ -256,7 +262,6 @@
                 margin: 5px auto;
                 width: 64px;
                 height: 64px;
-                overflow: hidden;
             }
 
             .filename {

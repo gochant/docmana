@@ -66,15 +66,43 @@
 .docmana-icon-iconsview:before {
     content: "\f03e";
 }
+
 .docmana-icon-uploader:before {
     content: "\f0ae";
 }
+
 .docmana-icon-upload:before {
     content: "\f093";
 }
+
 .docmana-icon-fullscreen:before {
     content: "\f066";
 }
+
 .docmana-icon-normal:before {
     content: "\f065";
+}
+
+.docmana {
+    .icon-locked {
+        position: relative;
+
+        &:before {
+            .docmana-icon;
+            content: "\f023";
+            color: #F3A409;
+            position: absolute;
+            bottom: -.2em;
+            right: -.2em;
+            font-size: 1.5em;
+        }
+    }
+
+    .icons-view {
+        .icon-locked:before {
+            font-size: 2em;
+            /*bottom: -5px;
+            right: -5px;*/
+        }
+    }
 }

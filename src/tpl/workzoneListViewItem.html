@@ -3,7 +3,7 @@
     data-name="<%- data.name %>">
     <td class="name">
         <span title="<%= T.fileMetadata(data) %>">
-            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %> drag-block"></span>
+            <span class="filetype <%- T.name2IconClass(data.name, data.mime, data) %> drag-block"></span>
             <span class="filename drag-block">
                 <%- data.name %>
             </span>

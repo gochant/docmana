@@ -208,7 +208,13 @@
                         e.preventDefault();
                         if (e.ctrlKey) {
                             var curr = that.select();
-                            $.merge($target, curr);
+                            if ($target.hasClass('ui-selected')) {
+                                $target = curr.filter(function(i, dom) {
+                                    return dom !== $target.get(0);
+                                });
+                            } else {
+                                $.merge($target, curr);
+                            }
                         }
                         // shift 操作的行为与windows下不一致
                         if (e.shiftKey) {
@@ -241,11 +247,11 @@
                         that.$('.inline-edit').blur();
                     },
                     selected: function (e, ui) {
-                      //  $(ui.selected).addClass('bg-primary');
+                        //  $(ui.selected).addClass('bg-primary');
                         that._triggerSelectDebounce();
                     },
                     unselected: function (e, ui) {
-                     //   $(ui.unselected).removeClass('bg-primary');
+                        //   $(ui.unselected).removeClass('bg-primary');
                         that._triggerSelectDebounce();
                     },
                     stop: function (e, ui) {
@@ -267,16 +273,20 @@
                 start: function (e, ui) {
                     that._clearTimer();
 
-                    var $selected = that.select();
+                    var $allSelected = that.select();
+                    var $selected = that._nonLockingItems($allSelected);
                     // 设置当前选中项为当前拖动元素
-                    $.ui.ddmanager.current.element = $selected;
+                    $.ui.ddmanager.current.element = $allSelected;
 
                     // 设置 helper
-                    var $thumbs = $($selected.find('.filetype').splice(0, 4)).clone();
+                    var $thumbs = $($allSelected.find('.filetype').splice(0, 4)).clone();
                     $.each($thumbs, function (i, el) {
                         $(el).addClass('icon' + i);
                     });
-                    ui.helper.append($thumbs).find('.count').html($selected.length);
+
+                    var count = $selected.length === 0 ? 'X' : $selected.length;
+                    ui.helper.append($thumbs)
+                        .find('.count').html(count);
                 }
             });
 
@@ -290,7 +300,15 @@
                     var dest = $(e.target).attr('id');
 
                     that.store().moveTo(dest, targets);
+
                 }
+            });
+        },
+        _nonLockingItems: function ($items) {
+            var that = this;
+            return $items.filter(function (i, dom) {
+                var d = that.store().byId($(dom).attr('id'));
+                return d.locked !== 1;
             });
         },
         _unselectAll: function (e) {
@@ -317,9 +335,9 @@
             if (!$(e.target).is(':input')) {
                 this.$('.inline-edit').blur();
                 // 由于点击子节点会造成父节点焦点丢失，这里的判断并没多大作用...
-               // if ($(document.activeElement).closest('.docmana').length === 0) {
-                    this._$focusEl().focus();
-               // }
+                // if ($(document.activeElement).closest('.docmana').length === 0) {
+                this._$focusEl().focus();
+                // }
             }
             // 如果单纯点击，则手动进行反选
             if (!this._moving && $(e.target).closest('.file-list-item').length === 0) {
@@ -335,9 +353,9 @@
             var $el = $(e.currentTarget);
 
             if (this._isSingleSelected($el)) {
+                // 延迟执行重命名
                 var timer = _.delay(_.bind(function ($el) {
                     if (this._isSingleSelected($el)) {
-
                         this.main().exec('rename');
                     }
                 }, this), 700, $el);
@@ -368,12 +386,14 @@
         editItemName: function (callback, isForce) {
             var $item = this.select();
             if ($item.length !== 1) return;
+
             var $filename = $item.find('.filename');
             var mode = this.isListLayout() ? 0 : 1;
             docmana.utils.inlineEdit($filename, function (name) {
                 callback(name);
             }, mode, isForce);
         },
+        // 选择记录('next' or 'previous')
         selectTo: function (pos) {
             var $items = this.$items();
             var curr = this.select().last();
@@ -439,8 +459,9 @@
 
     });
 
+    docmana.ui.Workzone = WorkZone;
     docmana.ui.workzone = function (options) {
-        return new WorkZone(options);
+        return new docmana.ui.Workzone(options);
     }
 })();
 

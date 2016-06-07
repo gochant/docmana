@@ -74,11 +74,16 @@
             var that = this;
             var tplFile = this.tpl('uploaderFiles');
             var formatFileSize = docmana.utils.formatFileSize;
+            var url = _.isFunction(this.props.url) ? this.props.url()
+                : (this.props.url || this.store().url());
 
             $fileInput.fileupload({
-                url: this.store().url(),
-                formData: function () {
-                    return _.map(that.store().uploadParams(), function (value, key) {
+                url: url,
+                formData: function ($input) {
+                    this.url = that.store().uploadUrl == null ? this.url : that.store().uploadUrl(this.url, this.files, this.fileInput);
+
+                    var params = that.store().uploadParams(this.files, this.fileInput);
+                    return _.map(params, function (value, key) {
                         return {
                             name: key,
                             value: value
@@ -175,7 +180,7 @@
                     data.context.remove();
                     that.updateBadge();
                     that.updateDialogDisplay();
-                    that.store().trigger('sync', data.result);
+                    that.store().trigger('uploaded', data.result);
                 }
             });
 
@@ -196,8 +201,9 @@
         }
     });
 
+    docmana.ui.Uploader = Uploader;
     docmana.ui.uploader = function (options) {
-        return new Uploader(options);
+        return new docmana.ui.Uploader(options);
     }
 })();
 

@@ -44,8 +44,9 @@
         }
     });
 
+    docmana.ui.Statusbar = Statusbar;
     docmana.ui.statusbar = function (options) {
-        return new Statusbar(options);
+        return new docmana.ui.Statusbar(options);
     }
 
 })();

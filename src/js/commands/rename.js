@@ -13,8 +13,11 @@
         },
         exec: function () {
             var that = this;
+            var id = that.workzone().getIds()[0];
+            var data = that.store().byId(id);
+            if (data && data.locked === 1) return;
+
             this.workzone().editItemName(function (name) {
-                var id = that.workzone().getIds()[0];
                 that.store().rename(name, id).done(function () {
                     that.main().focus();
                 });
@@ -25,6 +28,6 @@
     docmana.commands[commandName] = function (options) {
         return new Cmd(options);
     }
-
+    docmana.commands[commandName].constructor = Cmd;
 })();
 

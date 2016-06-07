@@ -24,8 +24,9 @@
         }
     });
 
+    docmana.ui.Toolbar = Toolbar;
     docmana.ui.toolbar = function (options) {
-        return new Toolbar(options);
+        return new docmana.ui.Toolbar(options);
     }
 })();
 

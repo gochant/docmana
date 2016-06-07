@@ -17,7 +17,7 @@
                 var id = this.workzone().select().attr('id');
                 info = this.store().byId(id);
             }
-            if (info == null) return;
+            if (info == null || info.locked === 1) return;
             // 文件夹，则打开
             if (info.mime === 'directory') {
                 this.store().open(info.hash);
@@ -28,7 +28,6 @@
                 }
                // this.store().content(info.hash);
             }
-            // TODO: 文件类型，则查看，如果未提供查看器，则弹出提示，并提供下载链接
         }
     });
 

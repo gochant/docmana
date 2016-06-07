@@ -31,8 +31,7 @@
             var ids = this._filteredIds();
             var that = this;
             _.forEach(ids, function (id) {
-                var url = that.store().fileUrl(id, 1);
-                $.fileDownload(url);
+                that.store().download(id);
             });
         }
     });

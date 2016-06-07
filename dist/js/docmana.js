@@ -1272,8 +1272,11 @@ $.extend({
         }
     }
     if (!_.trim) {
-        _.trim = String.prototype.trim || function () {
-            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        _.trim = function (str) {
+            if (String.prototype.trim) {
+                return str.trim();
+            }
+            return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
         };
     }
 
@@ -1378,13 +1381,27 @@ $.extend({
             this.$element().addClass('disabled').attr('disabled', 'disabeld');
         },
         canExec: function () {
+            var result = true;
+
             if (this.enabledWhen) {
                 var selected = this.workzone().select();
-                if (this.enabledWhen === 'selected' && selected.length <= 0) return false;
-                if (this.enabledWhen === 'single' && selected.length !== 1) return false;
-                if (this.enabledWhen === 'multiple' && selected.length < 1) return false;
+                if (this.enabledWhen === 'selected' && selected.length <= 0) {
+                    result = false;
+                } else {
+                    if (this.enabledWhen === 'single' && selected.length !== 1) {
+                        result = false;
+                    } else {
+                        if (this.enabledWhen === 'multiple' && selected.length < 1) {
+                            result = false;
+                        }
+                    }
+                }
             }
-            return true;
+            if (result && this.props.canExec) {
+                result = this.props.canExec.call(this);
+            }
+         
+            return result;
         },
 
         exec: function () { },
@@ -1693,9 +1710,9 @@ window.docmana.templates['uploaderFiles.html'] = '        <% for (var i=0, file;
 window.docmana.templates['uploaderTrigger.html'] = '<div class="btn-uploader btn-group-sm" style="position:relative;"  title="<%- L(\'textFileUpload\') %>">\n    <button class="btn btn-default btn-sm">\n        <i class="fa fa-tasks"></i>\n    </button>\n    <span class="badge badge-notify"></span>\n</div>';
 window.docmana.templates['viewer.html'] = '<div class="modal-header">\n    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n        <span aria-hidden="true">&times;</span>\n    </button>\n    <h4 class="modal-title">�ļ�</h4>\n</div>\n<div class="modal-body no-padding docmana-viewer-body">\n\n</div>\n<div class="modal-footer clearfix">\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'cmdDownload\') %>"\n            data-action="download">\n        <i class="docmana-icon docmana-icon-download"></i>\n    </button>\n    <button type="button" class="btn btn-default"\n            title="<%- L(\'textPreviousItem\') %>"\n            data-action="previous">\n        <i class="docmana-icon docmana-icon-back"></i>\n    </button>\n    <button type="button"\n            class="btn btn-default"\n            data-action="next"\n            title="<%- L(\'textNextItem\') %>">\n        <i class="docmana-icon docmana-icon-forward"></i>\n    </button>\n</div>';
 window.docmana.templates['workzoneIconsView.html'] = '<div class="icons-view docmana-workzone-view clearfix">\n</div>\n';
-window.docmana.templates['workzoneIconsViewItem.html'] = '<div id="<%- data.hash %>"\n     title="<%= T.fileMetadata(data) %>"\n     class="drag-block file-list-item <%- T.mime2Class(data.mime) %>"\n     data-name="<%- data.name %>">\n    <div class="filetype <%- T.name2IconClass(data.name, data.mime)%> drag-block"></div>\n    <div class="filename drag-block" title="<%- data.name %>">\n        <%- data.name %>\n    </div>\n</div>\n';
+window.docmana.templates['workzoneIconsViewItem.html'] = '<div id="<%- data.hash %>"\n     title="<%= T.fileMetadata(data) %>"\n     class="drag-block file-list-item <%- T.mime2Class(data.mime) %>"\n     data-name="<%- data.name %>">\n    <div class="filetype <%- T.name2IconClass(data.name, data.mime, data)%> drag-block"></div>\n    <div class="filename drag-block" title="<%- data.name %>">\n        <%- data.name %>\n    </div>\n</div>\n';
 window.docmana.templates['workzoneListView.html'] = '<div class="list-view">\n    <div class="datatable-header panel panel-default">\n        <table class="table table-bordered table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <thead>\n                <tr>\n                    <th><%- L(\'fileName\') %></th>\n                    <th><%- L(\'fileDateModified\') %></th>\n                    <th><%- L(\'fileType\') %></th>\n                    <th><%- L(\'fileSize\') %></th>\n                </tr>\n            </thead>\n        </table>\n    </div>\n    <div class="datatable-content">\n        <table class="table table-condensed no-margin">\n            <colgroup>\n                <col />\n                <col style="width:135px;" />\n                <col style="width:135px;" />\n                <col style="width:90px;" />\n            </colgroup>\n            <tbody class="docmana-workzone-view"></tbody>\n        </table>\n    </div>\n</div>\n';
-window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %>"\n    class="file-list-item <%- T.mime2Class(data.mime) %>"\n    data-name="<%- data.name %>">\n    <td class="name">\n        <span title="<%= T.fileMetadata(data) %>">\n            <span class="filetype <%- T.name2IconClass(data.name, data.mime) %> drag-block"></span>\n            <span class="filename drag-block">\n                <%- data.name %>\n            </span>\n        </span>\n\n    </td>\n    <td class="metadata date text-muted">\n        <span class="drag-block">\n            <%- T.formatDate(data.ts) %>\n        </span>\n    </td>\n    <td class="metadata type text-muted">\n        <span class="drag-block">\n            <%- L(\'kind\' + T.mime2Type(data.mime)) %>\n        </span>\n    </td>\n    <td class="metadata size text-muted">\n        <span class="drag-block">\n            <%- data.mime === \'directory\' ? \'\' : T.formatFileSize(data.size, true) %>\n        </span>\n    </td>\n</tr>\n';
+window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %>"\n    class="file-list-item <%- T.mime2Class(data.mime) %>"\n    data-name="<%- data.name %>">\n    <td class="name">\n        <span title="<%= T.fileMetadata(data) %>">\n            <span class="filetype <%- T.name2IconClass(data.name, data.mime, data) %> drag-block"></span>\n            <span class="filename drag-block">\n                <%- data.name %>\n            </span>\n        </span>\n\n    </td>\n    <td class="metadata date text-muted">\n        <span class="drag-block">\n            <%- T.formatDate(data.ts) %>\n        </span>\n    </td>\n    <td class="metadata type text-muted">\n        <span class="drag-block">\n            <%- L(\'kind\' + T.mime2Type(data.mime)) %>\n        </span>\n    </td>\n    <td class="metadata size text-muted">\n        <span class="drag-block">\n            <%- data.mime === \'directory\' ? \'\' : T.formatFileSize(data.size, true) %>\n        </span>\n    </td>\n</tr>\n';
 
 (function () {
 
@@ -1804,8 +1821,10 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
         exec: function () {
             var args = _.toArray(arguments);
             var name = args.shift();
+            var isForce = args.shift();
             var cmd = this.command(name);
-            if (cmd) {
+
+            if (isForce || (cmd && cmd.canExec())) {               
                 cmd.exec.apply(cmd, args);
             }
         },
@@ -1813,7 +1832,7 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
             this.$el.focus();
         },
         startup: function () {
-            var a = this.$el[0].outerWidth;
+            //var a = this.$el[0].outerWidth;
             this.trigger('started');
             this.store.open(null, 1);
         }
@@ -2214,6 +2233,10 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 this.sortBy();
                 this.update(request);
             });
+
+            this.listenTo(this, 'uploaded', function (data) {
+                this.trigger('sync', data);
+            });
         },
         cleanData: function () {
             // 移除未保存的数据
@@ -2302,6 +2325,11 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 q: q
             });
         },
+        // 下载
+        download: function (id) {
+            var url = fileUrl(id, 1);
+            $.fileDownload(url);
+        },
         content: function (target) {
             var that = this;
             return this.getJSON({
@@ -2347,6 +2375,9 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
                 cmd: 'upload',
                 target: this.cwd().hash
             });
+        },
+        getFileExt: function (data) {
+            return docmana.utils.fileNameExtension(data.name);
         },
         // 删除
         rm: function (targets) {
@@ -2431,13 +2462,19 @@ window.docmana.templates['workzoneListViewItem.html'] = '<tr id="<%- data.hash %
 
             return prefix + mime[0] + (mime[0] !== 'image' && mime[1] ? ' ' + prefix + mime[1].replace(/(\.|\+)/g, '-') : '');
         },
-        name2IconClass: function (name, mime) {
+        name2IconClass: function (name, mime, data) {
+            var result;
             if (mime === 'directory') {
-                return 'icon-folder';
+                result = 'icon-folder';
+            } else {
+                var parts = name.split('.');
+                var prefix = 'icon-';
+                result = prefix + parts[parts.length - 1];
             }
-            var parts = name.split('.');
-            var prefix = 'icon-';
-            return prefix + parts[parts.length - 1];
+            if (data.locked === 1) {
+                result += ' icon-locked';
+            }
+            return result;
         },
         mime2Class: function (mime) {
             if (mime === 'directory') {
@@ -2773,6 +2810,7 @@ var Plugins;
         }
     });
 
+
     docmana.commands[commandName] = function (options) {
         return new Cmd(options);
     }
@@ -2844,8 +2882,7 @@ var Plugins;
             var ids = this._filteredIds();
             var that = this;
             _.forEach(ids, function (id) {
-                var url = that.store().fileUrl(id, 1);
-                $.fileDownload(url);
+                that.store().download(id);
             });
         }
     });
@@ -3104,7 +3141,7 @@ var Plugins;
                 var id = this.workzone().select().attr('id');
                 info = this.store().byId(id);
             }
-            if (info == null) return;
+            if (info == null || info.locked === 1) return;
             // 文件夹，则打开
             if (info.mime === 'directory') {
                 this.store().open(info.hash);
@@ -3115,7 +3152,6 @@ var Plugins;
                 }
                // this.store().content(info.hash);
             }
-            // TODO: 文件类型，则查看，如果未提供查看器，则弹出提示，并提供下载链接
         }
     });
 
@@ -3200,8 +3236,11 @@ var Plugins;
         },
         exec: function () {
             var that = this;
+            var id = that.workzone().getIds()[0];
+            var data = that.store().byId(id);
+            if (data && data.locked === 1) return;
+
             this.workzone().editItemName(function (name) {
-                var id = that.workzone().getIds()[0];
                 that.store().rename(name, id).done(function () {
                     that.main().focus();
                 });
@@ -3212,7 +3251,7 @@ var Plugins;
     docmana.commands[commandName] = function (options) {
         return new Cmd(options);
     }
-
+    docmana.commands[commandName].constructor = Cmd;
 })();
 
 
@@ -3388,57 +3427,6 @@ var Plugins;
 (function () {
     "use strict";
 
-    var Breadcrumbs = docmana.ViewBase.extend({
-        listen: function () {
-            this.listenTo(this.history(), 'change', function() {
-                this.render();
-            });
-        },
-        events: {
-            'click li > a': '_linkHandler'
-        },
-        $breadcrumb: function () {
-            return this.$('.breadcrumb');
-        },
- 
-        render: function () {
-            var tpl = this.tpl('breadcrumbs');
-            var pathData = this.history().getPath();
-            this.$el.html(tpl(pathData));
-
-            this._interactive();
-        },
-        _interactive: function () {
-            var that = this;
-            this.$('li > a:not(.ui-droppable)').droppable({
-                accept: ".file-list-item",
-                hoverClass: "drop-active",
-                drop: function (e, ui) {
-                    // 注意：如果这里要直接取 ui.draggable，则需手动更改 ddmanager
-                    var targets = that.workzone().getIds(ui.draggable);
-                    var dest = $(e.target).attr('data-hash');
-
-                    that.store().moveTo(dest, targets);
-                }
-            });
-        },
-        _linkHandler: function (e) {
-            e.preventDefault();
-            var hash = $(e.currentTarget).attr('data-hash');
-            this.main().exec('open', this.history().byId(hash));
-        }
-    });
-
-    docmana.ui.breadcrumbs = function (options) {
-        return new Breadcrumbs(options);
-    }
-
-})();
-
-
-(function () {
-    "use strict";
-
     var Navigation = docmana.CommandContainer.extend({
         templateName: 'navigation',
         breadcrumbTemplateName: 'breadcrumb',
@@ -3494,12 +3482,13 @@ var Plugins;
         _linkHandler: function (e) {
             e.preventDefault();
             var hash = $(e.currentTarget).attr('data-hash');
-            this.main().exec('open', this.history().byId(hash));
+            this.main().exec('open', true, this.history().byId(hash));
         }
     });
 
+    docmana.ui.Navigation = Navigation;
     docmana.ui.navigation = function (options) {
-        return new Navigation(options);
+        return new docmana.ui.Navigation(options);
     }
 
 })();
@@ -3669,8 +3658,9 @@ var Plugins;
         }
     });
 
+    docmana.ui.Statusbar = Statusbar;
     docmana.ui.statusbar = function (options) {
-        return new Statusbar(options);
+        return new docmana.ui.Statusbar(options);
     }
 
 })();
@@ -3702,8 +3692,9 @@ var Plugins;
         }
     });
 
+    docmana.ui.Toolbar = Toolbar;
     docmana.ui.toolbar = function (options) {
-        return new Toolbar(options);
+        return new docmana.ui.Toolbar(options);
     }
 })();
 
@@ -3784,11 +3775,16 @@ var Plugins;
             var that = this;
             var tplFile = this.tpl('uploaderFiles');
             var formatFileSize = docmana.utils.formatFileSize;
+            var url = _.isFunction(this.props.url) ? this.props.url()
+                : (this.props.url || this.store().url());
 
             $fileInput.fileupload({
-                url: this.store().url(),
-                formData: function () {
-                    return _.map(that.store().uploadParams(), function (value, key) {
+                url: url,
+                formData: function ($input) {
+                    this.url = that.store().uploadUrl == null ? this.url : that.store().uploadUrl(this.url, this.files, this.fileInput);
+
+                    var params = that.store().uploadParams(this.files, this.fileInput);
+                    return _.map(params, function (value, key) {
                         return {
                             name: key,
                             value: value
@@ -3885,7 +3881,7 @@ var Plugins;
                     data.context.remove();
                     that.updateBadge();
                     that.updateDialogDisplay();
-                    that.store().trigger('sync', data.result);
+                    that.store().trigger('uploaded', data.result);
                 }
             });
 
@@ -3906,8 +3902,9 @@ var Plugins;
         }
     });
 
+    docmana.ui.Uploader = Uploader;
     docmana.ui.uploader = function (options) {
-        return new Uploader(options);
+        return new docmana.ui.Uploader(options);
     }
 })();
 
@@ -3967,7 +3964,7 @@ var Plugins;
                 var target = selectIds[0];
                 that.$body().html('');
                 var data = that.store().byId(target);
-                var ext = docmana.utils.fileNameExtension(data.name);
+                var ext = that.store().getFileExt(data);
                 that.parentDialog().find('.modal-title').text(data.name);
 
                 if (that.props.fileType.indexOf(ext) >= 0) {
@@ -4003,8 +4000,9 @@ var Plugins;
         }
     });
 
+    docmana.ui.Viewer = Viewer;
     docmana.ui.viewer = function (options) {
-        return new Viewer(options);
+        return new docmana.ui.Viewer(options);
     }
 
 })();
@@ -4380,6 +4378,7 @@ var Plugins;
         editItemName: function (callback, isForce) {
             var $item = this.select();
             if ($item.length !== 1) return;
+            
             var $filename = $item.find('.filename');
             var mode = this.isListLayout() ? 0 : 1;
             docmana.utils.inlineEdit($filename, function (name) {
@@ -4451,8 +4450,9 @@ var Plugins;
 
     });
 
+    docmana.ui.Workzone = WorkZone;
     docmana.ui.workzone = function (options) {
-        return new WorkZone(options);
+        return new docmana.ui.Workzone(options);
     }
 })();
 

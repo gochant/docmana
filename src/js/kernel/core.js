@@ -55,8 +55,11 @@
         }
     }
     if (!_.trim) {
-        _.trim = String.prototype.trim || function () {
-            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        _.trim = function (str) {
+            if (String.prototype.trim) {
+                return str.trim();
+            }
+            return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
         };
     }
 
@@ -161,13 +164,27 @@
             this.$element().addClass('disabled').attr('disabled', 'disabeld');
         },
         canExec: function () {
+            var result = true;
+
             if (this.enabledWhen) {
                 var selected = this.workzone().select();
-                if (this.enabledWhen === 'selected' && selected.length <= 0) return false;
-                if (this.enabledWhen === 'single' && selected.length !== 1) return false;
-                if (this.enabledWhen === 'multiple' && selected.length < 1) return false;
+                if (this.enabledWhen === 'selected' && selected.length <= 0) {
+                    result = false;
+                } else {
+                    if (this.enabledWhen === 'single' && selected.length !== 1) {
+                        result = false;
+                    } else {
+                        if (this.enabledWhen === 'multiple' && selected.length < 1) {
+                            result = false;
+                        }
+                    }
+                }
             }
-            return true;
+            if (result && this.props.canExec) {
+                result = this.props.canExec.call(this);
+            }
+         
+            return result;
         },
 
         exec: function () { },

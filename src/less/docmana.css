@@ -63,6 +63,28 @@
 .docmana-icon-normal:before {
   content: "\f065";
 }
+.docmana .icon-locked {
+  position: relative;
+}
+.docmana .icon-locked:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\f023";
+  color: #F3A409;
+  position: absolute;
+  bottom: -0.2em;
+  right: -0.2em;
+  font-size: 1.5em;
+}
+.docmana .icons-view .icon-locked:before {
+  font-size: 2em;
+  /*bottom: -5px;
+            right: -5px;*/
+}
 .docmana {
   /*微信文章*/
   /*20131217 new*/
@@ -994,6 +1016,10 @@
 .docmana.fixed .docmana-panel .datatable-header {
   margin: 0;
 }
+.docmana.static .docmana-panel .list-view .datatable-content,
+.docmana.fixed .docmana-panel .list-view .datatable-content {
+  overflow-y: scroll;
+}
 .docmana.static .docmana-panel .list-view,
 .docmana.fixed .docmana-panel .list-view,
 .docmana.static .docmana-panel .icons-view,
@@ -1068,7 +1094,7 @@
   /*color: #6D6D87;*/
 }
 .docmana .list-view .file-list-item .filename {
-  display: inline;
+  display: inline-block;
 }
 .docmana .list-view .file-list-item > td {
   vertical-align: middle;
@@ -1108,7 +1134,6 @@
   margin: 5px auto;
   width: 64px;
   height: 64px;
-  overflow: hidden;
 }
 .docmana .icons-view .file-list-item .filename {
   width: 100%;

@@ -53,7 +53,7 @@
                 var target = selectIds[0];
                 that.$body().html('');
                 var data = that.store().byId(target);
-                var ext = docmana.utils.fileNameExtension(data.name);
+                var ext = that.store().getFileExt(data);
                 that.parentDialog().find('.modal-title').text(data.name);
 
                 if (that.props.fileType.indexOf(ext) >= 0) {
@@ -89,8 +89,9 @@
         }
     });
 
+    docmana.ui.Viewer = Viewer;
     docmana.ui.viewer = function (options) {
-        return new Viewer(options);
+        return new docmana.ui.Viewer(options);
     }
 
 })();

@@ -17,6 +17,7 @@
         }
     });
 
+
     docmana.commands[commandName] = function (options) {
         return new Cmd(options);
     }

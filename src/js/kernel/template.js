@@ -19,13 +19,19 @@
 
             return prefix + mime[0] + (mime[0] !== 'image' && mime[1] ? ' ' + prefix + mime[1].replace(/(\.|\+)/g, '-') : '');
         },
-        name2IconClass: function (name, mime) {
+        name2IconClass: function (name, mime, data) {
+            var result;
             if (mime === 'directory') {
-                return 'icon-folder';
+                result = 'icon-folder';
+            } else {
+                var parts = name.split('.');
+                var prefix = 'icon-';
+                result = prefix + parts[parts.length - 1];
             }
-            var parts = name.split('.');
-            var prefix = 'icon-';
-            return prefix + parts[parts.length - 1];
+            if (data.locked === 1) {
+                result += ' icon-locked';
+            }
+            return result;
         },
         mime2Class: function (mime) {
             if (mime === 'directory') {

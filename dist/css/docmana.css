@@ -63,6 +63,15 @@
 .docmana-icon-normal:before {
   content: "\f065";
 }
+.docmana .icon-locked:before {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\f023";
+}
 .docmana {
   /*微信文章*/
   /*20131217 new*/

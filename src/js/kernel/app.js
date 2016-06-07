@@ -105,8 +105,10 @@
         exec: function () {
             var args = _.toArray(arguments);
             var name = args.shift();
+            var isForce = args.shift();
             var cmd = this.command(name);
-            if (cmd) {
+
+            if (isForce || (cmd && cmd.canExec())) {               
                 cmd.exec.apply(cmd, args);
             }
         },
@@ -114,7 +116,7 @@
             this.$el.focus();
         },
         startup: function () {
-            var a = this.$el[0].outerWidth;
+            //var a = this.$el[0].outerWidth;
             this.trigger('started');
             this.store.open(null, 1);
         }

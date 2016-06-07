@@ -74,6 +74,10 @@
                 this.sortBy();
                 this.update(request);
             });
+
+            this.listenTo(this, 'uploaded', function (data) {
+                this.trigger('sync', data);
+            });
         },
         cleanData: function () {
             // 移除未保存的数据
@@ -162,6 +166,11 @@
                 q: q
             });
         },
+        // 下载
+        download: function (id) {
+            var url = fileUrl(id, 1);
+            $.fileDownload(url);
+        },
         content: function (target) {
             var that = this;
             return this.getJSON({
@@ -169,12 +178,26 @@
                 target: target
             });
         },
+        _nonLocking: function (targets) {
+            var that = this;
+            return _.filter(targets, function (id) {
+                var d = that.byId(id);
+                return d.locked !== 1;
+            });
+        },
         // 粘贴
         paste: function (srcDir, destDir, targets, isCut) {
             if (srcDir === destDir) {
                 return this.duplicate(targets);
             }
+            var isLocked = this.byId(destDir).locked === 1;
 
+            targets = this._nonLocking(targets);
+
+            if (isLocked || targets.length === 0) {
+                return this._failDeferred();
+            }
+           
             return this.post({
                 cmd: 'paste',
                 cut: isCut,
@@ -185,6 +208,12 @@
         },
         // 副本
         duplicate: function (targets) {
+            targets = this._nonLocking(targets);
+
+            if (targets.length === 0) {
+                return this._failDeferred();
+            }
+
             return this.post({
                 cmd: 'duplicate',
                 targets: targets
@@ -208,12 +237,28 @@
                 target: this.cwd().hash
             });
         },
+        getFileExt: function (data) {
+            return docmana.utils.fileNameExtension(data.name);
+        },
         // 删除
         rm: function (targets) {
+            var that = this;
+            targets = _.filter(targets, function (id) {
+                var d = that.byId(id);
+                return d.locked !== 1;
+            });
+            if (targets.length === 0) {
+                return that._failDeferred();
+            }
             return this.post({
                 cmd: 'rm',
                 targets: targets
             });
+        },
+        _failDeferred: function () {
+            var deferred = $.Deferred();
+            deferred.reject();
+            return deferred.promise();
         },
         _getRequestParams: function (data) {
             return $.extend({}, this.props.requestData, data);
